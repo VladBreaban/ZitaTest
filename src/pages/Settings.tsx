@@ -1,94 +1,56 @@
 import React, { useState } from 'react';
 import { Layout } from '../components/Layout/Layout';
+import { Card, Button, Tabs } from '../components/ui';
 import { useAuth } from '../contexts/AuthContext';
 
 export const Settings: React.FC = () => {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('profile');
 
+  const tabs = [
+    { id: 'profile', label: 'Personal Information' },
+    { id: 'password', label: 'Password' },
+    { id: 'discount', label: 'Discount Codes' },
+    { id: 'bank', label: 'Bank Information' },
+  ];
+
   return (
     <Layout>
       <div className="max-w-4xl">
+        {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold mb-1" style={{ color: '#1a365d', fontFamily: 'Georgia, serif' }}>Account Settings</h1>
-            <p className="text-sm text-gray-500">Manage your profile and payment information.</p>
+            <h1 className="text-display-sm font-headline text-navy mb-1">Account Settings</h1>
+            <p className="text-sm text-navy-light">Manage your profile and payment information.</p>
           </div>
-          <button className="bg-primary hover:bg-primary-dark text-white font-semibold py-2.5 px-5 rounded-full transition-colors flex items-center gap-2 text-sm shadow-sm">
-            <span className="text-lg leading-none">+</span>
-            Withdraw
-          </button>
         </div>
 
         {/* Tabs */}
-        <div className="border-b border-gray-200 mb-6">
-          <nav className="-mb-px flex gap-8">
-            <button
-              onClick={() => setActiveTab('profile')}
-              className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'profile'
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              Personal Information
-            </button>
-            <button
-              onClick={() => setActiveTab('password')}
-              className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'password'
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              Password
-            </button>
-            <button
-              onClick={() => setActiveTab('discount')}
-              className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'discount'
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              Discount Codes
-            </button>
-            <button
-              onClick={() => setActiveTab('bank')}
-              className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'bank'
-                  ? 'border-primary text-primary'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              Bank Information
-            </button>
-          </nav>
-        </div>
+        <Tabs tabs={tabs} activeTab={activeTab} onChange={setActiveTab} />
 
         {/* Profile Tab */}
         {activeTab === 'profile' && (
-          <div className="bg-white p-6 rounded-xl shadow-sm">
-            <h2 className="text-lg font-semibold mb-6" style={{ color: '#1a365d' }}>Personal Information</h2>
+          <Card>
+            <h2 className="text-lg font-semibold mb-6 text-navy">Personal Information</h2>
             <form className="space-y-5">
               <div>
-                <label className="block text-sm font-medium mb-2" style={{ color: '#1a365d' }}>Full Name</label>
+                <label className="block text-sm font-medium mb-2 text-navy">Full Name</label>
                 <input
                   type="text"
                   defaultValue={user?.fullName || 'Dr. Maria Ionescu'}
-                  className="w-full px-4 py-2.5 border-0 bg-gray-50 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="w-full px-4 py-2.5 border border-border bg-background rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2" style={{ color: '#1a365d' }}>Email Address</label>
+                <label className="block text-sm font-medium mb-2 text-navy">Email Address</label>
                 <input
                   type="email"
                   defaultValue={user?.email || 'maria.ionescu@example.com'}
-                  className="w-full px-4 py-2.5 border-0 bg-gray-50 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="w-full px-4 py-2.5 border border-border bg-background rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2" style={{ color: '#1a365d' }}>Profile Photo</label>
+                <label className="block text-sm font-medium mb-2 text-navy">Profile Photo</label>
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 rounded-full overflow-hidden">
                     <img
@@ -97,59 +59,59 @@ export const Settings: React.FC = () => {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <button
-                    type="button"
-                    className="px-5 py-2 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-primary-dark transition-colors"
-                  >
-                    Change Photo
-                  </button>
+                  <Button type="button">Change Photo</Button>
                 </div>
               </div>
+              <div className="pt-4">
+                <Button type="submit">Save Changes</Button>
+              </div>
             </form>
-          </div>
+          </Card>
         )}
 
         {/* Password Tab */}
         {activeTab === 'password' && (
-          <div className="bg-white p-6 rounded-xl shadow-sm">
-            <h2 className="text-lg font-semibold mb-6" style={{ color: '#1a365d' }}>Password</h2>
+          <Card>
+            <h2 className="text-lg font-semibold mb-6 text-navy">Password</h2>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium mb-1" style={{ color: '#1a365d' }}>Change your password</p>
-                <p className="text-xs text-gray-500">Update your password to keep your account secure</p>
+                <p className="text-sm font-medium mb-1 text-navy">Change your password</p>
+                <p className="text-xs text-navy-light">Update your password to keep your account secure</p>
               </div>
-              <button className="px-5 py-2.5 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-primary-dark transition-colors">
-                Change Password
-              </button>
+              <Button>Change Password</Button>
             </div>
-          </div>
+          </Card>
         )}
 
         {/* Bank Tab */}
         {activeTab === 'bank' && (
-          <div className="bg-white p-6 rounded-xl shadow-sm">
-            <h2 className="text-lg font-semibold mb-6" style={{ color: '#1a365d' }}>Bank Information</h2>
+          <Card>
+            <h2 className="text-lg font-semibold mb-6 text-navy">Bank Information</h2>
             <form className="space-y-5">
               <div>
-                <label className="block text-sm font-medium mb-2" style={{ color: '#1a365d' }}>IBAN</label>
+                <label className="block text-sm font-medium mb-2 text-navy">IBAN</label>
                 <input
                   type="text"
                   defaultValue="RO49AAAA1B31007593840000"
-                  className="w-full px-4 py-2.5 border-0 bg-gray-50 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="w-full px-4 py-2.5 border border-border bg-background rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
                 />
-                <p className="text-xs text-gray-500 mt-2">Your commission payouts will be sent to this account</p>
+                <p className="text-xs text-navy-light mt-2">Your commission payouts will be sent to this account</p>
+              </div>
+              <div className="pt-4">
+                <Button type="submit">Save Changes</Button>
               </div>
             </form>
-          </div>
+          </Card>
         )}
 
         {/* Discount Codes Tab */}
         {activeTab === 'discount' && (
-          <div className="bg-white p-6 rounded-xl shadow-sm">
-            <h2 className="text-lg font-semibold mb-6" style={{ color: '#1a365d' }}>Discount Codes</h2>
+          <Card>
+            <h2 className="text-lg font-semibold mb-6 text-navy">Discount Codes</h2>
             <div className="space-y-5">
-              <div className="p-5 bg-orange-50 rounded-xl border border-primary/20">
-                <label className="block text-sm font-semibold mb-3" style={{ color: '#1a365d' }}>
+              {/* Client Discount Code */}
+              <div className="p-5 bg-orange-light/30 rounded-xl border border-orange-light">
+                <label className="block text-sm font-semibold mb-3 text-navy">
                   Client Discount Code (5% off)
                 </label>
                 <div className="flex items-center gap-3">
@@ -157,20 +119,27 @@ export const Settings: React.FC = () => {
                     type="text"
                     value="CLIENT5-MARIA"
                     readOnly
-                    className="flex-1 px-4 py-2.5 border-0 bg-white rounded-lg text-sm font-medium"
-                    style={{ color: '#FF9933' }}
+                    className="flex-1 px-4 py-2.5 border-0 bg-white rounded-xl text-sm font-medium text-orange"
                   />
-                  <button className="px-5 py-2.5 bg-primary text-white text-sm font-semibold rounded-lg hover:bg-primary-dark transition-colors flex items-center gap-2">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                  <Button 
+                    icon={
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                      </svg>
+                    }
+                  >
                     Copy
-                  </button>
+                  </Button>
                 </div>
-                <p className="text-xs text-gray-600 mt-3">
+                <p className="text-xs text-navy-light mt-3">
                   Share this code with clients for 5% off their orders. You earn 5% commission.
                 </p>
               </div>
+
+              {/* Personal Discount Code */}
               <div className="p-5 bg-blue-50 rounded-xl border border-blue-200">
-                <label className="block text-sm font-semibold mb-3" style={{ color: '#1a365d' }}>
+                <label className="block text-sm font-semibold mb-3 text-navy">
                   Your Personal Code (10% off)
                 </label>
                 <div className="flex items-center gap-3">
@@ -178,20 +147,26 @@ export const Settings: React.FC = () => {
                     type="text"
                     value="PROUD-MARIA"
                     readOnly
-                    className="flex-1 px-4 py-2.5 border-0 bg-white rounded-lg text-sm font-medium"
-                    style={{ color: '#0ea5e9' }}
+                    className="flex-1 px-4 py-2.5 border-0 bg-white rounded-xl text-sm font-medium text-blue-500"
                   />
-                  <button className="px-5 py-2.5 bg-blue-500 text-white text-sm font-semibold rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                  <Button 
+                    className="bg-blue-500 hover:bg-blue-600"
+                    icon={
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                      </svg>
+                    }
+                  >
                     Copy
-                  </button>
+                  </Button>
                 </div>
-                <p className="text-xs text-gray-600 mt-3">
+                <p className="text-xs text-navy-light mt-3">
                   Use this code for your own purchases and get 10% off
                 </p>
               </div>
             </div>
-          </div>
+          </Card>
         )}
       </div>
     </Layout>
