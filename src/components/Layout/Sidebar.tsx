@@ -41,7 +41,7 @@ export const Sidebar: React.FC = () => {
   const location = useLocation();
 
   return (
-    <div className="w-64 bg-white h-screen fixed left-0 top-0 flex flex-col z-50 border-r border-gray-100">
+    <div className="w-64 bg-white h-screen fixed left-0 top-0 flex flex-col z-50 border-r border-border">
       <div className="px-6 py-6">
         <img src="/zitamine_logo.png" alt="Zitamine PRO" className="h-7" />
       </div>
@@ -54,12 +54,20 @@ export const Sidebar: React.FC = () => {
             <Link
               key={item.path}
               to={item.path}
-              className={`sidebar-item ${isActive ? 'sidebar-item-active' : 'sidebar-item-inactive'}`}
+              className={`flex items-center gap-3 px-4 py-3 mb-1 rounded-xl transition-all text-sm ${
+                isActive
+                  ? 'bg-primary text-white font-semibold shadow-primary'
+                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+              }`}
             >
               <span className="flex-shrink-0">{item.icon}</span>
-              <span className="text-sm flex-1">{item.label}</span>
+              <span className="flex-1">{item.label}</span>
               {item.badge && (
-                <span className="flex-shrink-0 w-5 h-5 rounded-full bg-primary text-white text-xs flex items-center justify-center">{item.badge}</span>
+                <span className={`flex-shrink-0 w-5 h-5 rounded-full text-xs flex items-center justify-center font-medium ${
+                  isActive ? 'bg-white/30 text-white' : 'bg-primary text-white'
+                }`}>
+                  {item.badge}
+                </span>
               )}
             </Link>
           );
