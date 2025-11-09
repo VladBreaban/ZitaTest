@@ -5,8 +5,8 @@ export const Header: React.FC = () => {
   const { user } = useAuth();
 
   return (
-    <header className="bg-transparent h-16 fixed top-0 right-0 left-64 z-40">
-      <div className="h-full px-6 flex items-center justify-between">
+    <header className="bg-transparent h-16">
+      <div className="h-full px-0 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="relative">
             <svg className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

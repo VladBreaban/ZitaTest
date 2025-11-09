@@ -43,7 +43,7 @@ export const Dashboard: React.FC = () => {
   }
 
   const UsersIcon = (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF9933" strokeWidth="2">
       <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
       <circle cx="9" cy="7" r="4"></circle>
       <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
@@ -52,7 +52,7 @@ export const Dashboard: React.FC = () => {
   );
 
   const DollarIcon = (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF9933" strokeWidth="2">
       <line x1="12" y1="1" x2="12" y2="23" />
       <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
     </svg>
@@ -61,7 +61,7 @@ export const Dashboard: React.FC = () => {
   const DotsIcon = (
     <div className="flex items-center gap-1">
       {[0, 1, 2].map((i) => (
-        <svg key={i} width="7" height="7" viewBox="0 0 24 24" fill="currentColor">
+        <svg key={i} width="7" height="7" viewBox="0 0 24 24" fill="#FF9933">
           <circle cx="12" cy="12" r="10" />
         </svg>
       ))}
@@ -69,7 +69,7 @@ export const Dashboard: React.FC = () => {
   );
 
   const FileIcon = (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF9933" strokeWidth="2">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
       <polyline points="14 2 14 8 20 8" />
       <line x1="16" y1="13" x2="8" y2="13" />
@@ -80,62 +80,52 @@ export const Dashboard: React.FC = () => {
 
   return (
     <Layout>
-      <div className="relative max-w-[1440px] mx-auto w-full">
-        {/* Soft gradient background */}
-        <div
-          className="pointer-events-none absolute -top-10 right-0 w-[520px] h-[260px] opacity-80"
-          style={{
-            background: 'radial-gradient(circle at top right, #FFE2B8 0%, #FFF7EC 40%, rgba(255,247,236,0) 100%)',
-            zIndex: -1,
-          }}
-        />
+      <div className="max-w-[1200px] mx-auto w-full">
+        {/* Welcome header */}
+        <div className="mb-6">
+          <h1 className="text-heading-2 font-serif text-navy mb-1">
+            Welcome back, Dr. {doctorName}
+          </h1>
+          <p className="text-sm text-navy-light">
+            Here's what's happening with your clients today
+          </p>
+        </div>
 
-        <div className="relative pt-2 pb-10">
-          {/* Welcome header */}
-          <div className="mb-8">
-            <h1 className="text-display-sm font-headline text-navy mb-1">
-              Welcome back, Dr. {doctorName}
-            </h1>
-            <p className="text-sm text-navy-light">
-              Here's what's happening with your clients today
-            </p>
-          </div>
+        {/* KPI Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+          <StatCard
+            value={stats?.activeClients ?? 3}
+            label="Active clients"
+            icon={UsersIcon}
+          />
+          <StatCard
+            value={`${(stats?.totalCommissions ?? 25939.48).toFixed(2)} lei`}
+            label="Total commissions"
+            icon={DollarIcon}
+            trend={{ value: '+36% this month', positive: true }}
+          />
+          <StatCard
+            value={stats?.pendingOrders ?? 2}
+            label="Pending order"
+            icon={DotsIcon}
+          />
+          <StatCard
+            value={stats?.totalRecommendations ?? 4321}
+            label="Total Recommendations"
+            icon={FileIcon}
+          />
+        </div>
 
-          {/* KPI Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
-            <StatCard
-              value={stats?.activeClients ?? 3}
-              label="Active clients"
-              icon={UsersIcon}
-            />
-            <StatCard
-              value={`${(stats?.totalCommissions ?? 25939.48).toFixed(2)} lei`}
-              label="Total commissions"
-              icon={DollarIcon}
-              trend={{ value: '+36% this month', positive: true }}
-            />
-            <StatCard
-              value={stats?.pendingOrders ?? 2}
-              label="Pending order"
-              icon={DotsIcon}
-            />
-            <StatCard
-              value={stats?.totalRecommendations ?? 4321}
-              label="Total Recommendations"
-              icon={FileIcon}
-            />
-          </div>
+        {/* Quick Actions */}
+        <div className="mb-5">
+          <h2 className="text-heading-3 font-serif text-navy">
+            Quick actions
+          </h2>
+        </div>
 
-          {/* Quick Actions */}
-          <div className="mb-4">
-            <h2 className="text-xl font-headline font-bold text-navy">
-              Quick actions
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
-            {/* Create Recommendation */}
-            <Link
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+          {/* Create Recommendation */}
+          <Link
               to="/recommendations/create"
               className="relative h-64 rounded-2xl overflow-hidden cursor-pointer group"
               style={{
@@ -245,11 +235,11 @@ export const Dashboard: React.FC = () => {
             </Card>
           </div>
 
-          {/* Recent Activity */}
-          <div>
-            <h2 className="text-xl font-headline font-bold text-navy mb-4">
-              Recent Activity
-            </h2>
+        {/* Recent Activity */}
+        <div>
+          <h2 className="text-heading-3 font-serif text-navy mb-5">
+            Recent Activity
+          </h2>
             <Card padding="none" className="overflow-hidden">
               <Table>
                 <Table.Header>
@@ -290,7 +280,6 @@ export const Dashboard: React.FC = () => {
             </Card>
           </div>
         </div>
-      </div>
     </Layout>
   );
 };
