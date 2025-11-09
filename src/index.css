@@ -1,0 +1,159 @@
+@import "tailwindcss";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #FFF5EB;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.stat-card {
+  background-color: white;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+.quick-action-card {
+  border-radius: 0.75rem;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.quick-action-card:hover {
+  transform: scale(1.02);
+}
+
+.welcome-text {
+  /* Bine ai revenit! */
+
+  width: 402px;
+  height: 29px;
+
+  font-family: 'Tiempos Headline Regular';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 120%;
+  /* identical to box height, or 29px */
+  letter-spacing: -0.02em;
+
+  color: #043B6C;
+
+
+  /* Inside auto layout */
+  flex: none;
+  order: 0;
+  align-self: stretch;
+  flex-grow: 0;
+
+}
+
+.divider {
+ 
+  font-family: 'Satoshi';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 19px;
+  /* identical to box height */
+  text-align: center;
+
+  color: #4A6A85;
+
+ 
+
+}
+
+.login-input {
+  /* Frame 1707482146 */
+
+  box-sizing: border-box;
+
+  /* Auto layout */
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 32px;
+  gap: 16px;
+
+  width: 400px;
+  height: 52px;
+
+  background: #FFFFFF;
+  border: 1px solid #EBEBEB;
+  border-radius: 64px;
+
+  /* Inside auto layout */
+  flex: none;
+  order: 0;
+  flex-grow: 1;
+
+}
+
+.min-h-screen {
+  min-height: 90vh;
+}
+
+.btn-primary {
+  background-color: #FF9933;
+  color: white;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  transition: all 0.2s;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+}
+
+.btn-primary:hover {
+  background-color: #E68A2E;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 1rem;
+  margin-bottom: 0.25rem;
+  border-radius: 0.75rem;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.sidebar-item-active {
+  background-color: #FF9933;
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(255, 153, 51, 0.25);
+}
+
+.sidebar-item-inactive {
+  color: #6b7280;
+}
+
+.sidebar-item-inactive:hover {
+  background-color: #f9fafb;
+  color: #374151;
+}
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
