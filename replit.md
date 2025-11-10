@@ -21,11 +21,17 @@ b2b-portal-web/
 ├── src/
 │   ├── components/       # Reusable UI components
 │   │   ├── Layout/       # Sidebar, Header, Layout wrapper
+│   │   ├── ui/           # Reusable UI components (Stepper, etc.)
 │   │   ├── PrivateRoute.tsx
 │   │   └── Toast.tsx
 │   ├── contexts/         # React Context providers
 │   │   └── AuthContext.tsx
 │   ├── pages/            # Route page components
+│   │   ├── recommendations/  # 3-step wizard components
+│   │   │   ├── CreateRecommendation.tsx
+│   │   │   ├── Step1SelectProducts.tsx
+│   │   │   ├── Step2AddDetails.tsx
+│   │   │   └── Step3ClientInfo.tsx
 │   │   ├── Login.tsx
 │   │   ├── Register.tsx
 │   │   ├── Dashboard.tsx
@@ -118,6 +124,19 @@ All API calls go through `src/services/api.ts` which:
 - No global state management library (Redux, etc.)
 
 ## Recent Changes
+- **2025-11-10**: Implemented 3-step recommendation wizard
+  - **Step 1**: Product selection with search, category filters, and Shopify integration
+  - **Step 2**: Protocol details with dosage, frequency, and duration for each product
+  - **Step 3**: Client information and order summary (email is optional)
+  - Client-side category filtering for better UX (no repeated API calls)
+  - Added Stepper component to show wizard progress
+  - Created reusable wizard components in `/pages/recommendations/` folder
+  
+- **2025-11-10**: Redesigned Settings page to match Figma
+  - Removed tabbed interface
+  - Single-page layout showing all sections (Personal Info, Password, Discount Codes, Bank Info)
+  - Clean, card-based design with consistent spacing
+  
 - **2025-11-09 (Evening)**: Fixed critical Tailwind CSS issue
   - **Problem**: Tailwind v4 was installed but all code written for v3, causing styles not to load
   - **Solution**: Downgraded to Tailwind CSS v3.4.17
@@ -144,8 +163,6 @@ This is a **frontend-only** application. It requires a separate backend API serv
 
 ### Missing Features (From Original TODO)
 - Registration page implementation
-- Recommendation wizard (3-step process)
-- Product selection from Shopify
 - Payouts page with charts
 - Image upload for profile photo
 - Real-time notifications
