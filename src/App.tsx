@@ -5,7 +5,7 @@ import { Register } from './pages/Register';
 import { AdminDoctors } from './pages/AdminDoctors';
 import { Dashboard } from './pages/Dashboard';
 import { Recommendations } from './pages/Recommendations';
-import { CreateRecommendation } from './pages/recommendations';
+import { CreateRecommendation } from './pages/recommendations/CreateRecommendation';
 import { Clients } from './pages/Clients';
 import { Payouts } from './pages/Payouts';
 import { Settings } from './pages/Settings';
