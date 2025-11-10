@@ -1,0 +1,227 @@
+import React, { useState, useEffect } from 'react';
+import { Button, Card } from '../../components/ui';
+import { productService } from '../../services/productService';
+import { ShopifyProduct } from '../../types';
+import { SelectedProduct } from './CreateRecommendation';
+
+interface Props {
+  selectedProducts: SelectedProduct[];
+  onSelectProducts: (products: SelectedProduct[]) => void;
+  onNext: () => void;
+  onCancel: () => void;
+}
+
+export const Step1SelectProducts: React.FC<Props> = ({
+  selectedProducts,
+  onSelectProducts,
+  onNext,
+  onCancel,
+}) => {
+  const [products, setProducts] = useState<ShopifyProduct[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [selectedFilter, setSelectedFilter] = useState('Toate Produsele');
+  const [allProducts, setAllProducts] = useState<ShopifyProduct[]>([]);
+
+  useEffect(() => {
+    loadProducts();
+  }, [search]);
+
+  useEffect(() => {
+    filterProducts();
+  }, [selectedFilter, allProducts]);
+
+  const loadProducts = async () => {
+    try {
+      setLoading(true);
+      const data = await productService.getProducts(search, 50);
+      setAllProducts(data);
+    } catch (error) {
+      console.error('Failed to load products:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filterProducts = () => {
+    if (selectedFilter === 'Toate Produsele') {
+      setProducts(allProducts);
+    } else {
+      const filtered = allProducts.filter((product) => {
+        const productType = product.product_type?.toLowerCase() || '';
+        const filterLower = selectedFilter.toLowerCase();
+        return productType.includes(filterLower) || product.title.toLowerCase().includes(filterLower);
+      });
+      setProducts(filtered);
+    }
+  };
+
+  const toggleProduct = (product: ShopifyProduct) => {
+    const isSelected = selectedProducts.some((p) => p.product.id === product.id);
+    
+    if (isSelected) {
+      onSelectProducts(selectedProducts.filter((p) => p.product.id !== product.id));
+    } else {
+      onSelectProducts([
+        ...selectedProducts,
+        {
+          product,
+          quantity: 1,
+          dailyDosage: '',
+          notes: '',
+        },
+      ]);
+    }
+  };
+
+  const isProductSelected = (productId: number) => {
+    return selectedProducts.some((p) => p.product.id === productId);
+  };
+
+  const canContinue = selectedProducts.length > 0;
+
+  return (
+    <div>
+      {/* Header & Search */}
+      <div className="mb-6">
+        <h2 className="text-heading-3 font-serif text-navy mb-4">Produse</h2>
+        <p className="text-sm text-navy-light mb-4">
+          Poți regăsi produsele din Magazin. Zitamine are 400 de produse în gamă, și cu siguranță afli produsul cel mai potrivit – pentru cei mai precauți și exigenți pacienți ai tăi!
+        </p>
+
+        <div className="flex items-center gap-3 mb-6">
+          <div className="relative flex-1 max-w-md">
+            <svg 
+              className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-navy-lighter" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-9 pr-4 py-2.5 bg-white border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 w-full shadow-sm"
+            />
+          </div>
+        </div>
+
+        {/* Filter Tabs */}
+        <div className="flex items-center gap-2 mb-6 flex-wrap">
+          {['Toate Produsele', 'Capsule/tablete', 'Minerale', 'Pil Plante', 'Plante & extracte naturale', 'Suplimente & Co-agenți', 'Vitamine'].map((filter) => (
+            <button
+              key={filter}
+              onClick={() => setSelectedFilter(filter)}
+              className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
+                selectedFilter === filter
+                  ? 'bg-primary text-white'
+                  : 'bg-white text-navy-light border border-border hover:border-primary/30'
+              }`}
+            >
+              {filter}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Product Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mb-8">
+        {loading ? (
+          <div className="col-span-full text-center py-12 text-navy-light">Loading products...</div>
+        ) : products.length === 0 ? (
+          <div className="col-span-full text-center py-12 text-navy-light">No products found</div>
+        ) : (
+          products.map((product) => {
+            const selected = isProductSelected(product.id);
+            const imageUrl = product.images?.[0]?.src || '';
+            const price = product.variants?.[0]?.price || '0';
+
+            return (
+              <Card
+                key={product.id}
+                className={`relative cursor-pointer transition-all ${
+                  selected ? 'ring-2 ring-primary shadow-lg' : 'hover:shadow-md'
+                }`}
+                onClick={() => toggleProduct(product)}
+              >
+                {/* Product Image */}
+                <div className="relative mb-3 rounded-xl overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 aspect-square">
+                  {imageUrl && (
+                    <img
+                      src={imageUrl}
+                      alt={product.title}
+                      className="w-full h-full object-cover"
+                    />
+                  )}
+                  {selected && (
+                    <div className="absolute top-2 right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
+                      <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                  )}
+                  <div className="absolute top-2 left-2 bg-orange text-white text-xs font-bold px-2 py-1 rounded-md">
+                    {product.variants?.[0]?.inventory_quantity || 0} Capsule
+                  </div>
+                </div>
+
+                {/* Product Info */}
+                <div>
+                  <h3 className="font-semibold text-sm text-navy mb-1 line-clamp-2">
+                    {product.title}
+                  </h3>
+                  <p className="text-xs text-navy-lighter mb-3 line-clamp-2">
+                    {product.body_html?.replace(/<[^>]*>/g, '').slice(0, 80)}...
+                  </p>
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-lg font-bold text-navy">{price} lei</span>
+                    <button
+                      className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${
+                        selected
+                          ? 'bg-primary text-white'
+                          : 'bg-orange-light text-orange hover:bg-orange hover:text-white'
+                      }`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleProduct(product);
+                      }}
+                    >
+                      {selected ? (
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      ) : (
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </Card>
+            );
+          })
+        )}
+      </div>
+
+      {/* Actions */}
+      <div className="flex items-center justify-between pt-6 border-t border-border">
+        <Button variant="outline" onClick={onCancel}>
+          Cancel
+        </Button>
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-navy-light">
+            {selectedProducts.length} product{selectedProducts.length !== 1 ? 's' : ''} selected
+          </span>
+          <Button onClick={onNext} disabled={!canContinue}>
+            Continue to Client Info
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};

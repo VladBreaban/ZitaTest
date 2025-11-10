@@ -1,35 +1,27 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Layout } from '../components/Layout/Layout';
-import { Card, Button, Tabs } from '../components/ui';
+import { Card, Button } from '../components/ui';
 import { useAuth } from '../contexts/AuthContext';
 
 export const Settings: React.FC = () => {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState('profile');
-
-  const tabs = [
-    { id: 'profile', label: 'Personal Information' },
-    { id: 'password', label: 'Password' },
-    { id: 'discount', label: 'Discount Codes' },
-    { id: 'bank', label: 'Bank Information' },
-  ];
 
   return (
     <Layout>
-      <div className="max-w-4xl">
+      <div className="max-w-3xl">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-display-sm font-headline text-navy mb-1">Account Settings</h1>
+            <h1 className="text-heading-2 font-serif text-navy mb-1">Account Settings</h1>
             <p className="text-sm text-navy-light">Manage your profile and payment information.</p>
           </div>
+          <Button className="bg-white text-primary border border-primary hover:bg-primary/5">
+            Withdraw
+          </Button>
         </div>
 
-        {/* Tabs */}
-        <Tabs tabs={tabs} activeTab={activeTab} onChange={setActiveTab} />
-
-        {/* Profile Tab */}
-        {activeTab === 'profile' && (
+        <div className="space-y-6">
+          {/* Personal Information */}
           <Card>
             <h2 className="text-lg font-semibold mb-6 text-navy">Personal Information</h2>
             <form className="space-y-5">
@@ -38,7 +30,7 @@ export const Settings: React.FC = () => {
                 <input
                   type="text"
                   defaultValue={user?.fullName || 'Dr. Maria Ionescu'}
-                  className="w-full px-4 py-2.5 border border-border bg-background rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  className="w-full px-4 py-2.5 border border-border bg-white rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
                 />
               </div>
               <div>
@@ -46,7 +38,7 @@ export const Settings: React.FC = () => {
                 <input
                   type="email"
                   defaultValue={user?.email || 'maria.ionescu@example.com'}
-                  className="w-full px-4 py-2.5 border border-border bg-background rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  className="w-full px-4 py-2.5 border border-border bg-white rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
                 />
               </div>
               <div>
@@ -67,10 +59,8 @@ export const Settings: React.FC = () => {
               </div>
             </form>
           </Card>
-        )}
 
-        {/* Password Tab */}
-        {activeTab === 'password' && (
+          {/* Password */}
           <Card>
             <h2 className="text-lg font-semibold mb-6 text-navy">Password</h2>
             <div className="flex items-center justify-between">
@@ -81,31 +71,8 @@ export const Settings: React.FC = () => {
               <Button>Change Password</Button>
             </div>
           </Card>
-        )}
 
-        {/* Bank Tab */}
-        {activeTab === 'bank' && (
-          <Card>
-            <h2 className="text-lg font-semibold mb-6 text-navy">Bank Information</h2>
-            <form className="space-y-5">
-              <div>
-                <label className="block text-sm font-medium mb-2 text-navy">IBAN</label>
-                <input
-                  type="text"
-                  defaultValue="RO49AAAA1B31007593840000"
-                  className="w-full px-4 py-2.5 border border-border bg-background rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
-                />
-                <p className="text-xs text-navy-light mt-2">Your commission payouts will be sent to this account</p>
-              </div>
-              <div className="pt-4">
-                <Button type="submit">Save Changes</Button>
-              </div>
-            </form>
-          </Card>
-        )}
-
-        {/* Discount Codes Tab */}
-        {activeTab === 'discount' && (
+          {/* Discount Codes */}
           <Card>
             <h2 className="text-lg font-semibold mb-6 text-navy">Discount Codes</h2>
             <div className="space-y-5">
@@ -145,7 +112,7 @@ export const Settings: React.FC = () => {
                 <div className="flex items-center gap-3">
                   <input
                     type="text"
-                    value="PROUD-MARIA"
+                    value="PROMO-MARIA"
                     readOnly
                     className="flex-1 px-4 py-2.5 border-0 bg-white rounded-xl text-sm font-medium text-blue-500"
                   />
@@ -162,12 +129,31 @@ export const Settings: React.FC = () => {
                   </Button>
                 </div>
                 <p className="text-xs text-navy-light mt-3">
-                  Use this code for your own purchases and get 10% off
+                  Use this code for your own purchases and get 10% off.
                 </p>
               </div>
             </div>
           </Card>
-        )}
+
+          {/* Bank Information */}
+          <Card>
+            <h2 className="text-lg font-semibold mb-6 text-navy">Bank Information</h2>
+            <form className="space-y-5">
+              <div>
+                <label className="block text-sm font-medium mb-2 text-navy">IBAN</label>
+                <input
+                  type="text"
+                  defaultValue="RO49AAAA1B31007593840000"
+                  className="w-full px-4 py-2.5 border border-border bg-white rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                />
+                <p className="text-xs text-navy-light mt-2">Your commission payouts will be sent to this account.</p>
+              </div>
+              <div className="pt-4">
+                <Button type="submit">Save Changes</Button>
+              </div>
+            </form>
+          </Card>
+        </div>
       </div>
     </Layout>
   );
