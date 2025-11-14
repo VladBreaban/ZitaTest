@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Layout } from '../components/Layout/Layout';
 import { StatCard, Button, Card, Badge, Table } from '../components/ui';
 import { recommendationService } from '../services/recommendationService';
 import { Recommendation } from '../types';
 
 export const Recommendations: React.FC = () => {
+  const navigate = useNavigate();
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('');
@@ -68,7 +69,7 @@ export const Recommendations: React.FC = () => {
 
   return (
     <Layout>
-      <div className="max-w-7xl">
+      <div >
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
@@ -85,22 +86,22 @@ export const Recommendations: React.FC = () => {
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <StatCard
-            value={recommendations.length || 684}
+            value={loading ? '-' : recommendations.length}
             label="Total recommendations"
             icon={FileIcon}
           />
           <StatCard
-            value={recommendations.filter((r) => r.status === 'purchased').length || 456}
+            value={loading ? '-' : recommendations.filter((r) => r.status === 'purchased').length}
             label="Purchased"
             icon={ShoppingBagIcon}
           />
           <StatCard
-            value={recommendations.filter((r) => r.status === 'viewed').length || 589}
+            value={loading ? '-' : recommendations.filter((r) => r.status === 'viewed').length}
             label="Viewed"
             icon={EyeIcon}
           />
           <StatCard
-            value={recommendations.filter((r) => r.status === 'draft').length || 12}
+            value={loading ? '-' : recommendations.filter((r) => r.status === 'draft').length}
             label="Drafts"
             icon={EditIcon}
           />
@@ -110,7 +111,7 @@ export const Recommendations: React.FC = () => {
         <div className="mb-5">
           <div className="flex items-center justify-between">
             <h2 className="text-base font-semibold text-navy">
-              All Recommendations ({recommendations.length || 3})
+              All Recommendations ({loading ? '-' : recommendations.length})
             </h2>
             <div className="flex items-center gap-3">
               {/* Search */}
@@ -207,10 +208,17 @@ export const Recommendations: React.FC = () => {
                     </Table.Cell>
                     <Table.Cell>
                       <div className="flex items-center gap-2">
-                        <button className="text-primary hover:text-primary-hover text-xs font-medium">
+                        <button
+                          onClick={() => navigate(`/recommendations/${rec.id}`)}
+                          className="text-primary hover:text-primary-hover text-xs font-medium"
+                        >
                           View
                         </button>
-                        <button className="text-navy-lighter hover:text-navy transition-colors">
+                        <button
+                          onClick={() => navigate(`/recommendations/${rec.id}/edit`)}
+                          className="text-navy-lighter hover:text-navy transition-colors"
+                          title="Edit"
+                        >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                           </svg>

@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Card, FormField } from '../../components/ui';
+import { AddClientModal } from '../../components/AddClientModal';
 import { SelectedProduct, ProtocolDetails, ClientInfo } from './CreateRecommendation';
+import { clientService } from '../../services/clientService';
+import { ShopifyCustomer } from '../../types';
 
 interface Props {
   clientInfo: ClientInfo;
@@ -19,6 +22,54 @@ export const Step3ClientInfo: React.FC<Props> = ({
   onBack,
   onSubmit,
 }) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState<ShopifyCustomer[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const [isAddClientModalOpen, setIsAddClientModalOpen] = useState(false);
+
+  useEffect(() => {
+    const delaySearch = setTimeout(() => {
+      if (searchTerm.trim().length >= 2) {
+        handleSearch();
+      } else {
+        setSearchResults([]);
+        setShowResults(false);
+      }
+    }, 500);
+
+    return () => clearTimeout(delaySearch);
+  }, [searchTerm]);
+
+  const handleSearch = async () => {
+    setIsSearching(true);
+    try {
+      const results = await clientService.searchShopifyCustomers(searchTerm);
+      setSearchResults(results);
+      setShowResults(true);
+    } catch (error) {
+      console.error('Failed to search customers:', error);
+      setSearchResults([]);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleSelectCustomer = (customer: ShopifyCustomer) => {
+    onUpdateClient({
+      shopifyCustomerId: customer.id,
+      name: `${customer.firstName || ''} ${customer.lastName || ''}`.trim() || customer.email || 'Unknown',
+      email: customer.email || '',
+    });
+    setShowResults(false);
+    setSearchTerm('');
+  };
+
+  const handleClientCreated = (customer: ShopifyCustomer) => {
+    // Automatically select the newly created client
+    handleSelectCustomer(customer);
+  };
+
   const calculateTotal = () => {
     return selectedProducts.reduce((total, item) => {
       const price = parseFloat(item.product.variants?.[0]?.price || '0');
@@ -26,7 +77,7 @@ export const Step3ClientInfo: React.FC<Props> = ({
     }, 0);
   };
 
-  const canSubmit = clientInfo.name.trim() !== '';
+  const canSubmit = clientInfo.shopifyCustomerId !== null;
 
   return (
     <div>
@@ -35,27 +86,86 @@ export const Step3ClientInfo: React.FC<Props> = ({
       {/* Client Info Card */}
       <Card className="mb-6">
         <h3 className="text-lg font-semibold text-navy mb-4">Client info</h3>
-        
+
         <div className="space-y-4">
-          <FormField label="Client Name" required>
-            <input
-              type="text"
-              value={clientInfo.name}
-              onChange={(e) => onUpdateClient({ ...clientInfo, name: e.target.value })}
-              placeholder="e.g., Ana Popescu"
-              className="w-full px-4 py-2.5 border border-border bg-white rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
-            />
+          <FormField label="Search for Client" required>
+            <div className="relative">
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search by name or email..."
+                className="w-full px-4 py-2.5 border border-border bg-white rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+              />
+              {isSearching && (
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                  <div className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full"></div>
+                </div>
+              )}
+
+              {/* Search Results Dropdown */}
+              {showResults && searchResults.length > 0 && (
+                <div className="absolute z-10 w-full mt-1 bg-white border border-border rounded-xl shadow-lg max-h-60 overflow-y-auto">
+                  {searchResults.map((customer) => (
+                    <button
+                      key={customer.id}
+                      type="button"
+                      onClick={() => handleSelectCustomer(customer)}
+                      className="w-full px-4 py-3 text-left hover:bg-gray-50 border-b border-border last:border-b-0 transition-colors"
+                    >
+                      <div className="font-medium text-navy">
+                        {customer.firstName} {customer.lastName}
+                      </div>
+                      {customer.email && (
+                        <div className="text-xs text-navy-lighter">{customer.email}</div>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {showResults && searchResults.length === 0 && !isSearching && (
+                <div className="absolute z-10 w-full mt-1 bg-white border border-border rounded-xl shadow-lg">
+                  <div className="px-4 py-3 border-b border-border">
+                    <p className="text-sm text-navy-light">No clients found</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowResults(false);
+                      setIsAddClientModalOpen(true);
+                    }}
+                    className="w-full px-4 py-3 text-left hover:bg-primary/5 transition-colors flex items-center gap-2 text-primary font-medium"
+                  >
+                    <span className="text-xl leading-none">+</span>
+                    Add New Client
+                  </button>
+                </div>
+              )}
+            </div>
           </FormField>
 
-          <FormField label="Client Email (optional)">
-            <input
-              type="email"
-              value={clientInfo.email}
-              onChange={(e) => onUpdateClient({ ...clientInfo, email: e.target.value })}
-              placeholder="ana.popescu@example.com"
-              className="w-full px-4 py-2.5 border border-border bg-white rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
-            />
-          </FormField>
+          {/* Selected Client Display */}
+          {clientInfo.shopifyCustomerId && (
+            <div className="p-4 bg-green-50 border border-green-200 rounded-xl">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="text-sm font-semibold text-green-800">Selected Client:</div>
+                  <div className="text-sm text-green-700">{clientInfo.name}</div>
+                  {clientInfo.email && (
+                    <div className="text-xs text-green-600">{clientInfo.email}</div>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => onUpdateClient({ shopifyCustomerId: null, name: '', email: '' })}
+                  className="text-red-600 hover:text-red-700 text-sm font-medium"
+                >
+                  Clear
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </Card>
 
@@ -119,6 +229,13 @@ export const Step3ClientInfo: React.FC<Props> = ({
           Generate Offering Link
         </Button>
       </div>
+
+      {/* Add Client Modal */}
+      <AddClientModal
+        isOpen={isAddClientModalOpen}
+        onClose={() => setIsAddClientModalOpen(false)}
+        onClientCreated={handleClientCreated}
+      />
     </div>
   );
 };

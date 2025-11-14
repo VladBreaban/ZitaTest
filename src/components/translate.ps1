@@ -1,0 +1,24 @@
+$content = Get-Content 'DoctorDetailsModal.tsx.backup' -Raw
+$content = $content -replace "'Failed to load doctor details'","'Nu s-au putut încărca detaliile doctorului'"
+$content = $content -replace 'Doctor Details','Detalii Doctor'
+$content = $content -replace 'Loading\.\.\.','Se încarcă...'
+$content = $content -replace 'Basic Information','Informații de bază'
+$content = $content -replace 'Full Name','Nume complet'
+$content = $content -replace 'Phone','Telefon'
+$content = $content -replace 'Professional Information','Informații profesionale'
+$content = $content -replace 'Health Profession','Profesie medicală'
+$content = $content -replace 'Expertise Level','Nivel de expertiză'
+$content = $content -replace 'Organization Type','Tip organizație'
+$content = $content -replace 'Certificate','Certificat'
+$content = $content -replace 'Download Certificate','Descarcă certificatul'
+$content = $content -replace 'Financial Information','Informații financiare'
+$content = $content -replace 'Commission Rate','Rată comision'
+$content = $content -replace 'Client Discount Code','Cod reducere client'
+$content = $content -replace 'Personal Discount Code','Cod reducere personal'
+$content = $content -replace 'Timestamps','Date importante'
+$content = $content -replace 'Created At','Creat la'
+$content = $content -replace 'Approved At','Aprobat la'
+$content = $content -replace 'Updated At','Actualizat la'
+$content = $content -replace 'Close','Închide'
+$content = $content -replace "\.toLocaleString\(\)",".toLocaleString('ro-RO')"
+Set-Content -Path 'DoctorDetailsModal.tsx' -Value $content -Encoding UTF8

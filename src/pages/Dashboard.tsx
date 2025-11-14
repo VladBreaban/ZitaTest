@@ -3,16 +3,20 @@ import { Link } from 'react-router-dom';
 import { Layout } from '../components/Layout/Layout';
 import { StatCard, Button, Card, Badge, Table } from '../components/ui';
 import { dashboardService } from '../services/dashboardService';
-import { DashboardStats } from '../types';
+import { recommendationService } from '../services/recommendationService';
+import { DashboardStats, Recommendation } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 
 export const Dashboard: React.FC = () => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [recentRecommendations, setRecentRecommendations] = useState<Recommendation[]>([]);
+  const [loadingRecommendations, setLoadingRecommendations] = useState(true);
   const { user } = useAuth();
 
   useEffect(() => {
     loadStats();
+    loadRecentRecommendations();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -24,6 +28,17 @@ export const Dashboard: React.FC = () => {
       console.error('Failed to load dashboard stats:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadRecentRecommendations = async () => {
+    try {
+      const data = await recommendationService.getRecommendations(undefined, undefined, 5, 1);
+      setRecentRecommendations(data.data);
+    } catch (error) {
+      console.error('Failed to load recent recommendations:', error);
+    } finally {
+      setLoadingRecommendations(false);
     }
   };
 
@@ -94,23 +109,23 @@ export const Dashboard: React.FC = () => {
         {/* KPI Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
           <StatCard
-            value={stats?.activeClients ?? 3}
+            value={stats?.activeClients ?? 0}
             label="Active clients"
             icon={UsersIcon}
           />
           <StatCard
-            value={`${(stats?.totalCommissions ?? 25939.48).toFixed(2)} lei`}
+            value={`${(stats?.totalCommissions ?? 0).toFixed(2)} lei`}
             label="Total commissions"
             icon={DollarIcon}
-            trend={{ value: '+36% this month', positive: true }}
+            trend={stats?.thisMonthCommissions ? { value: `+${stats.thisMonthCommissions.toFixed(2)} lei this month`, positive: true } : undefined}
           />
           <StatCard
-            value={stats?.pendingOrders ?? 2}
+            value={stats?.pendingOrders ?? 0}
             label="Pending order"
             icon={DotsIcon}
           />
           <StatCard
-            value={stats?.totalRecommendations ?? 4321}
+            value={stats?.totalRecommendations ?? 0}
             label="Total Recommendations"
             icon={FileIcon}
           />
@@ -227,7 +242,7 @@ export const Dashboard: React.FC = () => {
               </div>
               <div className="relative">
                 <Button
-                  className="w-full bg-white text-orange hover:bg-white/90 text-[10px] uppercase"
+                  className="w-full !bg-white !text-orange hover:!bg-white/90 text-[10px] uppercase !shadow-none"
                 >
                   Documentation
                 </Button>
@@ -241,42 +256,61 @@ export const Dashboard: React.FC = () => {
             Recent Activity
           </h2>
             <Card padding="none" className="overflow-hidden">
-              <Table>
-                <Table.Header>
-                  <Table.Row>
-                    <Table.Head>Name</Table.Head>
-                    <Table.Head>Email</Table.Head>
-                    <Table.Head>Created</Table.Head>
-                    <Table.Head>Status</Table.Head>
-                    <Table.Head>Commission</Table.Head>
-                    <Table.Head>Action</Table.Head>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {[
-                    { name: 'Ana Popescu', email: 'ana.popescu@example.com', date: '2025-10-08', status: 'achieved', commission: '799 lei' },
-                    { name: 'Ana Popescu', email: 'ana.popescu@example.com', date: '2025-10-08', status: 'in-progress', commission: '799 lei' },
-                    { name: 'Ana Popescu', email: 'ana.popescu@example.com', date: '2025-10-08', status: 'new', commission: '213.6 lei' },
-                  ].map((row, idx) => (
-                    <Table.Row key={idx}>
-                      <Table.Cell className="font-semibold text-navy">{row.name}</Table.Cell>
-                      <Table.Cell className="text-navy-light">{row.email}</Table.Cell>
-                      <Table.Cell className="text-navy-light">{row.date}</Table.Cell>
-                      <Table.Cell>
-                        <Badge variant={row.status as 'achieved' | 'in-progress' | 'new'}>
-                          {row.status === 'achieved' ? 'Achieved' : row.status === 'in-progress' ? 'In progress' : 'New'}
-                        </Badge>
-                      </Table.Cell>
-                      <Table.Cell className="font-semibold text-navy">{row.commission}</Table.Cell>
-                      <Table.Cell>
-                        <button className="text-sm font-medium text-blue-500 hover:text-blue-600">
-                          View
-                        </button>
-                      </Table.Cell>
+              {loadingRecommendations ? (
+                <div className="p-8 text-center text-navy-light">Loading...</div>
+              ) : recentRecommendations.length === 0 ? (
+                <div className="p-8 text-center text-navy-light">No recent activity</div>
+              ) : (
+                <Table>
+                  <Table.Header>
+                    <Table.Row>
+                      <Table.Head>Protocol</Table.Head>
+                      <Table.Head>Client</Table.Head>
+                      <Table.Head>Email</Table.Head>
+                      <Table.Head>Created</Table.Head>
+                      <Table.Head>Status</Table.Head>
+                      <Table.Head>Commission</Table.Head>
+                      <Table.Head>Action</Table.Head>
                     </Table.Row>
-                  ))}
-                </Table.Body>
-              </Table>
+                  </Table.Header>
+                  <Table.Body>
+                    {recentRecommendations.map((rec) => (
+                      <Table.Row key={rec.id}>
+                        <Table.Cell>
+                          <div className="text-sm font-medium text-primary">{rec.protocolName}</div>
+                          {rec.shortDescription && (
+                            <div className="text-xs text-navy-lighter mt-0.5">{rec.shortDescription}</div>
+                          )}
+                        </Table.Cell>
+                        <Table.Cell className="font-semibold text-navy">
+                          {rec.clientFirstName} {rec.clientLastName}
+                        </Table.Cell>
+                        <Table.Cell className="text-navy-light">{rec.clientEmail}</Table.Cell>
+                        <Table.Cell className="text-navy-light">
+                          {new Date(rec.createdAt).toLocaleDateString()}
+                        </Table.Cell>
+                        <Table.Cell>
+                          <Badge variant={
+                            rec.status === 'purchased' ? 'achieved' :
+                            rec.status === 'viewed' ? 'visualized' :
+                            rec.status === 'draft' ? 'draft' : 'new'
+                          }>
+                            {rec.status.charAt(0).toUpperCase() + rec.status.slice(1)}
+                          </Badge>
+                        </Table.Cell>
+                        <Table.Cell className="font-semibold text-navy">
+                          {rec.commissionAmount.toFixed(2)} lei
+                        </Table.Cell>
+                        <Table.Cell>
+                          <button className="text-sm font-medium text-blue-500 hover:text-blue-600">
+                            View
+                          </button>
+                        </Table.Cell>
+                      </Table.Row>
+                    ))}
+                  </Table.Body>
+                </Table>
+              )}
             </Card>
           </div>
         </div>

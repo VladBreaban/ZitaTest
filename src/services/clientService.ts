@@ -1,6 +1,13 @@
 import { apiService } from './api';
 import { Client, ShopifyCustomer, PagedResponse, ApiResponse } from '../types';
 
+interface CreateClientRequest {
+  email: string;
+  firstName: string;
+  lastName: string;
+  phone?: string;
+}
+
 export const clientService = {
   async getClients(
     status?: string,
@@ -29,5 +36,13 @@ export const clientService = {
       return response.data.data;
     }
     throw new Error(response.data.message || 'Failed to search customers');
+  },
+
+  async createClient(data: CreateClientRequest): Promise<ShopifyCustomer> {
+    const response = await apiService.post<ApiResponse<ShopifyCustomer>>('/clients', data);
+    if (response.data.success && response.data.data) {
+      return response.data.data;
+    }
+    throw new Error(response.data.message || 'Failed to create client');
   },
 };

@@ -8,6 +8,10 @@ export interface RegisterRequest {
   password: string;
   fullName: string;
   phone?: string;
+  healthProfession?: string;
+  expertiseLevel?: string;
+  organizationType?: string;
+  certificateUrl?: string;
 }
 
 export interface LoginResponse {
@@ -143,6 +147,14 @@ export interface ShopifyProduct {
     sku?: string;
     inventory_quantity?: number;
   }[];
+  metafields?: {
+    custom?: {
+      filters?: {
+        value?: string[];
+      };
+    };
+  };
+  collections?: string[];
 }
 
 export interface PagedResponse<T> {

@@ -22,22 +22,10 @@ export const Step1SelectProducts: React.FC<Props> = ({
   const [search, setSearch] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('Toate');
   const [allProducts, setAllProducts] = useState<ShopifyProduct[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchDebounce, setSearchDebounce] = useState('');
-  const productsPerPage = 20;
-
-  // Debounce search input
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setSearchDebounce(search);
-      setCurrentPage(1);
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [search]);
 
   useEffect(() => {
     loadProducts();
-  }, [searchDebounce]);
+  }, [search]);
 
   useEffect(() => {
     filterProducts();
@@ -46,7 +34,7 @@ export const Step1SelectProducts: React.FC<Props> = ({
   const loadProducts = async () => {
     try {
       setLoading(true);
-      const data = await productService.getProducts(searchDebounce, 250);
+      const data = await productService.getProducts(search, 250); // Fetch up to 500 active products
       setAllProducts(data);
     } catch (error) {
       console.error('Failed to load products:', error);
@@ -56,28 +44,20 @@ export const Step1SelectProducts: React.FC<Props> = ({
   };
 
   const filterProducts = () => {
-    let filtered = allProducts;
-
-    if (selectedFilter !== 'Toate') {
-      filtered = allProducts.filter((product) => {
-        const productType = product.product_type?.toLowerCase() || '';
-        const filterLower = selectedFilter.toLowerCase();
-        return productType.includes(filterLower) || productType === filterLower;
-      });
+    if (selectedFilter === 'Toate') {
+      setProducts(allProducts);
+      return;
     }
 
+    const filtered = allProducts.filter((product) => {
+      const productType = product.product_type?.toLowerCase() || '';
+      const filterLower = selectedFilter.toLowerCase();
+
+      // Match by product type
+      return productType.includes(filterLower) || productType === filterLower;
+    });
+
     setProducts(filtered);
-    setCurrentPage(1);
-  };
-
-  const totalPages = Math.ceil(products.length / productsPerPage);
-  const startIndex = (currentPage - 1) * productsPerPage;
-  const endIndex = startIndex + productsPerPage;
-  const paginatedProducts = products.slice(startIndex, endIndex);
-
-  const goToPage = (page: number) => {
-    setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const toggleProduct = (product: ShopifyProduct) => {
@@ -103,34 +83,6 @@ export const Step1SelectProducts: React.FC<Props> = ({
   };
 
   const canContinue = selectedProducts.length > 0;
-
-  const getPageNumbers = () => {
-    const pages: (number | string)[] = [];
-
-    if (totalPages <= 7) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      pages.push(1);
-
-      if (currentPage > 3) {
-        pages.push('...');
-      }
-
-      for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
-        pages.push(i);
-      }
-
-      if (currentPage < totalPages - 2) {
-        pages.push('...');
-      }
-
-      pages.push(totalPages);
-    }
-
-    return pages;
-  };
 
   return (
     <div>
@@ -183,23 +135,16 @@ export const Step1SelectProducts: React.FC<Props> = ({
             </button>
           ))}
         </div>
-
-        {/* Results count */}
-        {!loading && (
-          <div className="text-sm text-navy-light mb-4">
-            Showing {startIndex + 1}-{Math.min(endIndex, products.length)} of {products.length} products
-          </div>
-        )}
       </div>
 
       {/* Product Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mb-8">
         {loading ? (
           <div className="col-span-full text-center py-12 text-navy-light">Loading products...</div>
         ) : products.length === 0 ? (
           <div className="col-span-full text-center py-12 text-navy-light">No products found</div>
         ) : (
-          paginatedProducts.map((product) => {
+          products.map((product) => {
             const selected = isProductSelected(product.id);
             const imageUrl = product.images?.[0]?.src || '';
             const price = product.variants?.[0]?.price || '0';
@@ -272,50 +217,6 @@ export const Step1SelectProducts: React.FC<Props> = ({
           })
         )}
       </div>
-
-      {/* Pagination */}
-      {!loading && products.length > 0 && totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2 mb-8">
-          <button
-            onClick={() => goToPage(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="px-3 py-2 rounded-lg border border-border bg-white text-navy-light disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-
-          {getPageNumbers().map((page, index) => (
-            <React.Fragment key={index}>
-              {page === '...' ? (
-                <span className="px-3 py-2 text-navy-light">...</span>
-              ) : (
-                <button
-                  onClick={() => goToPage(page as number)}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                    currentPage === page
-                      ? 'bg-primary text-white'
-                      : 'bg-white text-navy-light border border-border hover:bg-gray-50'
-                  }`}
-                >
-                  {page}
-                </button>
-              )}
-            </React.Fragment>
-          ))}
-
-          <button
-            onClick={() => goToPage(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="px-3 py-2 rounded-lg border border-border bg-white text-navy-light disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
-      )}
 
       {/* Actions */}
       <div className="flex items-center justify-between pt-6 border-t border-border">

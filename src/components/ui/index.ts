@@ -6,3 +6,4 @@ export { Table } from './Table';
 export { FormField, Input, TextArea, Select } from './FormField';
 export { Tabs } from './Tabs';
 export { Stepper } from './Stepper';
+export { Modal } from './Modal';

@@ -46,7 +46,7 @@ export const Table: React.FC<TableProps> & {
 
 Table.Header = ({ children }) => (
   <thead className="bg-gray-50 border-b border-border">
-    <tr>{children}</tr>
+    {children}
   </thead>
 );
 

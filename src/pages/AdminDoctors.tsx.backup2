@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { apiService } from '../services/api';
-import { DoctorDetailsModal } from '../components/DoctorDetailsModal';
 
 interface Doctor {
   id: number;
@@ -17,7 +16,6 @@ export const AdminDoctors: React.FC = () => {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('pending');
-  const [selectedDoctorId, setSelectedDoctorId] = useState<number | null>(null);
 
   useEffect(() => {
     loadDoctors();
@@ -183,12 +181,6 @@ export const AdminDoctors: React.FC = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex gap-2">
-                        <button
-                          onClick={() => setSelectedDoctorId(doctor.id)}
-                          className="px-3 py-1 bg-blue-600 text-white text-xs font-medium rounded hover:bg-blue-700"
-                        >
-                          View Details
-                        </button>
                         {doctor.status === 'pending' && (
                           <>
                             <button
@@ -230,14 +222,6 @@ export const AdminDoctors: React.FC = () => {
           )}
         </div>
       </div>
-
-      {/* Doctor Details Modal */}
-      {selectedDoctorId && (
-        <DoctorDetailsModal
-          doctorId={selectedDoctorId}
-          onClose={() => setSelectedDoctorId(null)}
-        />
-      )}
     </div>
   );
 };

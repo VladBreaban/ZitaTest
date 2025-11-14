@@ -15,7 +15,7 @@ export const Settings: React.FC = () => {
             <h1 className="text-heading-2 font-serif text-navy mb-1">Account Settings</h1>
             <p className="text-sm text-navy-light">Manage your profile and payment information.</p>
           </div>
-          <Button className="bg-white text-primary border border-primary hover:bg-primary/5">
+          <Button className="!bg-white !text-primary !border !border-primary hover:!bg-primary/5 !shadow-none">
             Withdraw
           </Button>
         </div>

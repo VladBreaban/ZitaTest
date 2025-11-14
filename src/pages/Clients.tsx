@@ -1,28 +1,49 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Layout } from '../components/Layout/Layout';
 import { StatCard, Button, Card, Badge, Table } from '../components/ui';
+import { AddClientModal } from '../components/AddClientModal';
 import { clientService } from '../services/clientService';
 import { Client } from '../types';
 
 export const Clients: React.FC = () => {
+  const navigate = useNavigate();
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('');
+  const [totalCount, setTotalCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isAddClientModalOpen, setIsAddClientModalOpen] = useState(false);
+  const pageSize = 20;
 
   useEffect(() => {
     loadClients();
-  }, [search]);
+  }, [search, statusFilter, currentPage]);
 
   const loadClients = async () => {
     setLoading(true);
     try {
-      const data = await clientService.getClients(undefined, search);
+      const data = await clientService.getClients(
+        statusFilter || undefined,
+        search || undefined,
+        pageSize,
+        currentPage
+      );
       setClients(data.data);
+      setTotalCount(data.totalCount);
     } catch (error) {
       console.error('Failed to load clients:', error);
+      setClients([]);
+      setTotalCount(0);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleClientCreated = () => {
+    // Reload the clients list to show the new client
+    loadClients();
   };
 
   const UsersIcon = (
@@ -57,14 +78,17 @@ export const Clients: React.FC = () => {
 
   return (
     <Layout>
-      <div className="max-w-7xl">
+      <div>
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-display-sm font-headline text-navy mb-1">My Clients</h1>
             <p className="text-sm text-navy-light">Manage your client database and create recommendations.</p>
           </div>
-          <Button icon={<span className="text-lg leading-none">+</span>}>
+          <Button
+            icon={<span className="text-lg leading-none">+</span>}
+            onClick={() => setIsAddClientModalOpen(true)}
+          >
             Add Client
           </Button>
         </div>
@@ -72,22 +96,22 @@ export const Clients: React.FC = () => {
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <StatCard
-            value={clients.length || 503}
+            value={loading ? '-' : clients.length}
             label="Total Clients"
             icon={UsersIcon}
           />
           <StatCard
-            value={clients.filter((c) => c.status === 'active').length || 456}
+            value={loading ? '-' : clients.filter((c) => c.status === 'active').length}
             label="Active clients"
             icon={CheckIcon}
           />
           <StatCard
-            value={`${clients.reduce((sum, c) => sum + c.totalCommission, 0).toFixed(2) || '25939.48'} lei`}
+            value={loading ? '-' : `${clients.reduce((sum, c) => sum + c.totalCommission, 0).toFixed(2)} lei`}
             label="Total commission earned"
             icon={DollarIcon}
           />
           <StatCard
-            value={clients.filter((c) => c.status === 'inactive').length || 47}
+            value={loading ? '-' : clients.filter((c) => c.status === 'inactive').length}
             label="Pending clients"
             icon={ClockIcon}
           />
@@ -97,7 +121,7 @@ export const Clients: React.FC = () => {
         <div className="mb-5">
           <div className="flex items-center justify-between">
             <h2 className="text-base font-semibold text-navy">
-              All clients ({clients.length || 3})
+              All clients ({loading ? '-' : clients.length})
             </h2>
             <div className="flex items-center gap-3">
               {/* Search */}
@@ -122,22 +146,18 @@ export const Clients: React.FC = () => {
               {/* Filter */}
               <div className="flex items-center gap-2">
                 <span className="text-xs text-navy-light">Status:</span>
-                <select className="px-3 py-2 bg-white border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm">
+                <select
+                  value={statusFilter}
+                  onChange={(e) => {
+                    setStatusFilter(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  className="px-3 py-2 bg-white border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm"
+                >
                   <option value="">All</option>
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
                 </select>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  icon={
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
-                    </svg>
-                  }
-                >
-                  Filtre
-                </Button>
               </div>
             </div>
           </div>
@@ -185,10 +205,16 @@ export const Clients: React.FC = () => {
                     </Table.Cell>
                     <Table.Cell>
                       <div className="flex items-center gap-2">
-                        <button className="text-primary hover:text-primary-hover text-xs font-medium">
+                        <button
+                          onClick={() => navigate(`/clients/${client.shopifyCustomerId}`)}
+                          className="text-primary hover:text-primary-hover text-xs font-medium"
+                        >
                           View
                         </button>
-                        <button className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white hover:bg-primary-hover transition-colors">
+                        <button
+                          onClick={() => navigate(`/clients/${client.shopifyCustomerId}`)}
+                          className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white hover:bg-primary-hover transition-colors"
+                        >
                           <span className="text-sm">→</span>
                         </button>
                       </div>
@@ -199,6 +225,66 @@ export const Clients: React.FC = () => {
             </Table>
           )}
         </Card>
+
+        {/* Add Client Modal */}
+        <AddClientModal
+          isOpen={isAddClientModalOpen}
+          onClose={() => setIsAddClientModalOpen(false)}
+          onClientCreated={handleClientCreated}
+        />
+
+        {/* Pagination */}
+        {!loading && totalCount > pageSize && (
+          <div className="mt-6 flex items-center justify-between">
+            <div className="text-sm text-navy-light">
+              Showing {((currentPage - 1) * pageSize) + 1} to {Math.min(currentPage * pageSize, totalCount)} of {totalCount} clients
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </Button>
+              <div className="flex items-center gap-1">
+                {Array.from({ length: Math.ceil(totalCount / pageSize) }, (_, i) => i + 1)
+                  .filter((page) => {
+                    // Show first page, last page, current page, and pages around current
+                    return page === 1 ||
+                           page === Math.ceil(totalCount / pageSize) ||
+                           (page >= currentPage - 1 && page <= currentPage + 1);
+                  })
+                  .map((page, index, array) => (
+                    <React.Fragment key={page}>
+                      {index > 0 && array[index - 1] !== page - 1 && (
+                        <span className="px-2 text-navy-lighter">...</span>
+                      )}
+                      <button
+                        onClick={() => setCurrentPage(page)}
+                        className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
+                          currentPage === page
+                            ? 'bg-primary text-white'
+                            : 'text-navy-light hover:bg-gray-100'
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    </React.Fragment>
+                  ))}
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(currentPage + 1)}
+                disabled={currentPage >= Math.ceil(totalCount / pageSize)}
+              >
+                Next
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     </Layout>
   );
