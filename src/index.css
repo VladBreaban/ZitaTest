@@ -37,71 +37,56 @@ body {
 }
 
 .welcome-text {
-  /* Bine ai revenit! */
-
-  width: 402px;
-  height: 29px;
-
   font-family: 'Tiempos Headline Regular';
   font-style: normal;
   font-weight: 600;
   font-size: 24px;
   line-height: 120%;
-  /* identical to box height, or 29px */
   letter-spacing: -0.02em;
-
   color: #043B6C;
-
-
-  /* Inside auto layout */
   flex: none;
   order: 0;
   align-self: stretch;
   flex-grow: 0;
+}
 
+.step-text {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 150%;
+  letter-spacing: -0.01em;
+  color: #FA9C19;
+  display: flex;
 }
 
 .divider {
- 
   font-family: 'Satoshi';
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
   line-height: 19px;
-  /* identical to box height */
   text-align: center;
-
   color: #4A6A85;
-
- 
-
 }
 
 .login-input {
-  /* Frame 1707482146 */
-
   box-sizing: border-box;
-
-  /* Auto layout */
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   padding: 16px 32px;
   gap: 16px;
-
   width: 400px;
   height: 52px;
-
   background: #FFFFFF;
   border: 1px solid #EBEBEB;
   border-radius: 64px;
-
-  /* Inside auto layout */
   flex: none;
   order: 0;
   flex-grow: 1;
-
 }
 
 .min-h-screen {
@@ -149,11 +134,13 @@ body {
   background-color: #f9fafb;
   color: #374151;
 }
+
 @keyframes slideIn {
   from {
     transform: translateX(100%);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;

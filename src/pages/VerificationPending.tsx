@@ -1,30 +1,29 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import './LoginForm.css';
 
 export const VerificationPending: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex bg-white min-h-screen">
+    <div className="flex bg-white" style={{ minHeight: '100vh' }}>
       {/* LEFT SIDE - IMAGE */}
-      <div className="hidden lg:block w-[52%]">
+      <div className="hidden lg:block w-[58%]">
         <img
-          src="/screen1_left_image.png"
+          src="/images/register-screen.png"
           alt=""
           className="w-full h-full object-cover"
         />
       </div>
 
       {/* RIGHT SIDE */}
-      <div className="w-full lg:w-[48%] relative overflow-hidden bg-white flex flex-col" style={{ padding: "7vw" }}>
+      <div className="w-full lg:w-[42%] relative overflow-hidden bg-white flex flex-col" style={{ padding: "7vh 7.5vw 6vh 7.5vw" }}>
         {/* Gradient BG */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: 'linear-gradient(to bottom, #FFF5E8 0%, #FFFFFF 40%, #FFFFFF 100%)',
-            height: '100vh',
-            minHeight: '100vh',
-            maxHeight: '100vh'
+            backgroundColor: '#F8F9FA',
+
           }}
         />
 
@@ -43,32 +42,30 @@ export const VerificationPending: React.FC = () => {
         />
 
         <div className="relative" style={{ alignItems: 'center', justifyContent: 'center' }}>
-          {/* Logo */}
           <div>
             <img src="/zitamine_logo.png" alt="Zitamine PRO" />
           </div>
         </div>
 
         {/* CONTENT */}
-        <div className="relative flex flex-col px-10 sm:px-16 lg:px-20 pt-8 pb-8" style={{ alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+        <div className="relative flex flex-col " style={{justifyContent: 'center', height: '100%' }}>
           <div className="max-w-md text-center">
             <div className="mb-8">
-              <h1 className="text-[32px] font-bold mb-3 welcome-text">
+              <span className='step-text' style={{textAlign: 'start'}}>Pasul 3</span>
+              <h1 className=" font-bold mb-3 welcome-text" style={{textAlign: 'start'}}>
                 Verificare în curs
               </h1>
-              <p className="text-base" style={{ color: '#8E9BB0' }}>
-                Contul tău va fi revizuit de echipa noastră în vederea verificării. Îți vom trimite un email (sau te vom contacta) pentru a verifica înscrierea.
+              <p className="text-base" style={{ color: '#4A6A85', textAlign: 'start' }}>
+                Mulțumim! Documentele tale au fost trimise pentru verificare. Vei primi un email imediat ce contul tău este aprobat.
               </p>
             </div>
 
             <button
               onClick={() => navigate('/dashboard')}
-              className="w-full flex items-center justify-center gap-2 rounded-full text-white font-semibold transition-all shadow-md"
+              className="w-full orange-fill-btn flex items-center justify-center gap-2 rounded-full text-white transition-all shadow-md"
               style={{
                 background: '#FF9B19',
                 height: '60px',
-                fontSize: '15px',
-                boxShadow: '0 8px 22px rgba(255,155,25,0.35)',
               }}
             >
               Mergi la Dashboard

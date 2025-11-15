@@ -1,0 +1,166 @@
+.login-input::placeholder {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 28px;
+    letter-spacing: -0.01em;
+    color: #043B6C;
+}
+
+.orange-fill-btn {
+    background: #FF9B19;
+    height: 60px;
+    font-size: 18px;
+    font-family: 'Inter';
+    font-weight: 500;
+    box-shadow: 0 8px 22px rgba(255, 155, 25, 0.35);
+    transition: all 0.2s ease;
+}
+
+.orange-fill-btn:hover:not(:disabled) {
+    background: #FFa830;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 25px rgba(255, 155, 25, 0.4);
+}
+
+.orange-fill-btn:active:not(:disabled) {
+    transform: translateY(0px);
+}
+
+.link-btn {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 19px;
+    text-align: center;
+    text-decoration-line: underline;
+    color: #4A6A85;
+}
+
+/* User Type Card */
+.user-type-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 24px;
+    gap: 10px;
+    background: #FFFFFF;
+    box-shadow: 0px 0px 0px 1px rgba(14, 63, 126, 0.04),
+        0px 1px 1px -0.5px rgba(42, 51, 69, 0.04),
+        0px 3px 3px -1.5px rgba(42, 51, 70, 0.04),
+        0px 6px 6px -3px rgba(42, 51, 70, 0.04),
+        0px 12px 12px -6px rgba(14, 63, 126, 0.04),
+        0px 24px 24px -12px rgba(14, 63, 126, 0.04);
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Card Title */
+.user-type-title {
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 700;
+    font-size: 21px;
+    line-height: 27px;
+    letter-spacing: -0.18px;
+    color: #043B6C;
+}
+
+/* Hover effect */
+.user-type-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0px 0px 0px 1px rgba(14, 63, 126, 0.08),
+        0px 2px 2px -0.5px rgba(42, 51, 69, 0.08),
+        0px 6px 6px -1.5px rgba(42, 51, 70, 0.08),
+        0px 12px 12px -3px rgba(42, 51, 70, 0.08),
+        0px 18px 18px -6px rgba(14, 63, 126, 0.08),
+        0px 32px 32px -12px rgba(14, 63, 126, 0.08);
+}
+
+/* Active/Click effect */
+.user-type-card:active {
+    transform: translateY(0px) scale(0.99);
+}
+
+.user-type-card.selected .user-type-title {
+    color: #4CA7F8;
+}
+
+/* Card Description */
+.user-type-description {
+    font-family: 'Satoshi', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 27px;
+    letter-spacing: -0.18px;
+    color: #4A6A85;
+}
+
+/* Icon Circle */
+.icon-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background: #F2F2F2;
+    border-radius: 130.435px;
+    flex-shrink: 0;
+}
+
+.back-btn {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 19px;
+  text-align: center;
+  text-decoration-line: underline;
+  color: #4A6A85;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.back-btn:hover {
+  color: #1e3a5f;
+}
+
+.form-label {
+  color: #4A6A85;
+  font-size: 14px;
+  font-family: 'Inter';
+}
+
+.custom-checkbox {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #E6ECF4;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.custom-checkbox:checked {
+  background-color: #4CA7F8;
+  border-color: #4CA7F8;
+}
+
+.custom-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}

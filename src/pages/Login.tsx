@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import './LoginForm.css';
 
 export const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -26,9 +27,9 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex bg-white">
+    <div className="flex bg-white" style={{ minHeight: '100vh' }}>
       {/* LEFT SIDE - IMAGE (FULL HEIGHT, STRETCHED) */}
-      <div className="hidden lg:block w-[52%]">
+      <div className="hidden lg:block w-[58%]">
         <img
           src="/screen1_left_image.png"
           alt=""
@@ -37,16 +38,12 @@ export const Login: React.FC = () => {
       </div>
 
       {/* RIGHT SIDE */}
-      <div className="w-full lg:w-[48%] relative overflow-hidden bg-white flex flex-col" style={{ padding: "7vw" }}>
+      <div className="w-full lg:w-[42%] relative overflow-hidden flex flex-col" style={{ padding: "7vh 7.5vw 1vh 7.5vw" }}>
         {/* Gradient BG */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            background:
-              'linear-gradient(to bottom, #FFF5E8 0%, #FFFFFF 40%, #FFFFFF 100%)',
-            height: '100vh',
-            minHeight: '100vh',
-            maxHeight: '100vh'
+            backgroundColor: '#F8F9FA',
           }}
         />
 
@@ -75,13 +72,13 @@ export const Login: React.FC = () => {
         </div>
 
         {/* CONTENT */}
-        <div className="relative flex flex-col  px-10 sm:px-16 lg:px-20 pt-8 pb-8" style={{ alignItems: 'center', justifyContent: 'space-between', height: '100%' }}>
+        <div className="relative flex flex-col  pt-8 pb-8" style={{ justifyContent: 'space-between', height: '100%' }}>
 
 
           {/* Heading + Form block */}
           <div
-            className="max-w-md"
-            style={{ marginTop: '88px' }}
+            className="w-fulld"
+            style={{ marginTop: '78px' }}
           >
             {/* Heading */}
             <div className="mb-10">
@@ -97,7 +94,7 @@ export const Login: React.FC = () => {
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form className='w-full' onSubmit={handleSubmit} >
               {error && (
                 <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
                   {error}
@@ -115,7 +112,7 @@ export const Login: React.FC = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Email address"
                   className="w-full px-5 text-sm bg-white border border-[#E6ECF4] rounded-full focus:outline-none focus:ring-2 focus:ring-[#FFD18C] focus:border-transparent text-[#1e3a5f] login-input"
-                  style={{ height: '56px' }}
+                  style={{ height: '56px', width: '100%' }}
                 />
 
                 {/* Password */}
@@ -127,7 +124,7 @@ export const Login: React.FC = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Parolă"
                   className="w-full px-5 text-sm bg-white border border-[#E6ECF4] rounded-full focus:outline-none focus:ring-2 focus:ring-[#FFD18C] focus:border-transparent text-[#1e3a5f] login-input"
-                  style={{ height: '56px' }}
+                  style={{ height: '56px', width: '100%' }}
                 />
               </div>
               <div style={{ gap: '20px', display: 'flex', flexDirection: 'column' }}>
@@ -136,14 +133,7 @@ export const Login: React.FC = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full flex items-center justify-center gap-2 rounded-full text-white font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
-                    style={{
-                      background: '#FF9B19',
-                      height: '60px',
-                      fontSize: '15px',
-                      boxShadow: '0 8px 22px rgba(255,155,25,0.35)',
-                    }}
-                  >
+                    className="orange-fill-btn w-full flex items-center justify-center gap-2 rounded-full text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md">
                     {loading ? 'Se încarcă...' : 'Intră în cont'}
                     {!loading && (
                       <svg
@@ -165,15 +155,15 @@ export const Login: React.FC = () => {
 
                 {/* Divider */}
                 <div className="flex items-center gap-4 text-[11px] text-[#C4CDD9] pt-4 divider">
-                  <div className="flex-1 h-px bg-[#EDF1F7]" />
-                  <span>sau intră în cont cu</span>
-                  <div className="flex-1 h-px bg-[#EDF1F7]" />
+                  <div className="flex-1 h-px bg-[#CBCFD6]" style={{ opacity: 0.6 }} />
+                  <span style={{ fontFamily: 'Inter' }}>sau intră în cont cu</span>
+                  <div className="flex-1 h-px bg-[#CBCFD6]" style={{ opacity: 0.6 }} />
                 </div>
 
                 {/* Google */}
                 <button
                   type="button"
-                  className="w-full bg-white border border-[#EDF1F7] rounded-full flex items-center justify-center gap-3 text-[#4A5568] text-sm hover:bg-[#F8FAFD] transition-colors"
+                  className="w-full bg-[#F9FAFB] border border-[#EFEFEF] rounded-full flex items-center justify-center gap-3 text-[#4A5568] text-sm hover:bg-[#F8FAFD] transition-colors shadow-sm"
                   style={{ height: '56px' }}
                 >
                   <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -202,16 +192,16 @@ export const Login: React.FC = () => {
           </div>
 
           {/* Footer */}
-          <div className="mt-auto pt-10 flex gap-16 text-[11px] text-[#8E9BB0]">
+          <div className="mt-auto pt-10 px-3 flex justify-between text-[11px] text-[#8E9BB0]">
             <Link
               to="/forgot-password"
-              className="hover:text-[#4A5A75] underline"
+              className="hover:text-[#043B6C] link-btn"
             >
               Ai uitat parola?
             </Link>
             <Link
               to="/register"
-              className="text-[#FF9B19] hover:opacity-80 underline"
+              className="hover:text-[#043B6C link-btn"
             >
               Înregistrează-te acum
             </Link>
