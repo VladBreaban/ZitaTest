@@ -19,6 +19,7 @@ interface DoctorDetails {
   updatedAt: string | null;
   approvedAt: string | null;
   certificateUrl: string | null;
+  rejectionReason: string | null;
 }
 
 interface DoctorDetailsModalProps {
@@ -161,6 +162,16 @@ export const DoctorDetailsModal: React.FC<DoctorDetailsModalProps> = ({ doctorId
                   </div>
                 </div>
               </div>
+
+              {/* Rejection Reason (if rejected) */}
+              {doctor.status === 'rejected' && doctor.rejectionReason && (
+                <div className="bg-red-50 border border-red-200 rounded-xl p-6">
+                  <h3 className="text-lg font-semibold text-red-900 mb-4">Motiv Respingere</h3>
+                  <div className="bg-white rounded-lg p-4 border border-red-100">
+                    <p className="text-base text-gray-900 whitespace-pre-wrap">{doctor.rejectionReason}</p>
+                  </div>
+                </div>
+              )}
 
               {/* Timestamps */}
               <div className="bg-gray-50 rounded-xl p-6">

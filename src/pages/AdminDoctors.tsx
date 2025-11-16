@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { apiService } from '../services/api';
 import { DoctorDetailsModal } from '../components/DoctorDetailsModal';
+import { RejectDoctorModal } from '../components/RejectDoctorModal';
 
 interface Doctor {
   id: number;
@@ -11,6 +12,7 @@ interface Doctor {
   commissionRate: number;
   createdAt: string;
   approvedAt: string | null;
+  rejectionReason?: string | null;
 }
 
 export const AdminDoctors: React.FC = () => {
@@ -18,6 +20,7 @@ export const AdminDoctors: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>('pending');
   const [selectedDoctorId, setSelectedDoctorId] = useState<number | null>(null);
+  const [rejectingDoctor, setRejectingDoctor] = useState<{ id: number; name: string } | null>(null);
 
   useEffect(() => {
     loadDoctors();
@@ -45,11 +48,14 @@ export const AdminDoctors: React.FC = () => {
     }
   };
 
-  const rejectDoctor = async (doctorId: number) => {
+  const rejectDoctor = async (doctorId: number, rejectionReason: string) => {
     try {
-      await apiService.put(`/admin/doctors/${doctorId}/reject`);
+      await apiService.put(`/admin/doctors/${doctorId}/reject`, {
+        rejectionReason: rejectionReason
+      });
       await loadDoctors();
-      alert('Doctor rejected!');
+      setRejectingDoctor(null);
+      alert('Doctor rejected successfully! Email notification sent.');
     } catch (error: any) {
       alert('Failed to reject doctor: ' + (error.response?.data?.message || error.message));
     }
@@ -198,7 +204,7 @@ export const AdminDoctors: React.FC = () => {
                               Approve
                             </button>
                             <button
-                              onClick={() => rejectDoctor(doctor.id)}
+                              onClick={() => setRejectingDoctor({ id: doctor.id, name: doctor.fullName })}
                               className="px-3 py-1 bg-red-600 text-white text-xs font-medium rounded hover:bg-red-700"
                             >
                               Reject
@@ -236,6 +242,15 @@ export const AdminDoctors: React.FC = () => {
         <DoctorDetailsModal
           doctorId={selectedDoctorId}
           onClose={() => setSelectedDoctorId(null)}
+        />
+      )}
+
+      {/* Reject Doctor Modal */}
+      {rejectingDoctor && (
+        <RejectDoctorModal
+          doctorName={rejectingDoctor.name}
+          onConfirm={(rejectionReason) => rejectDoctor(rejectingDoctor.id, rejectionReason)}
+          onClose={() => setRejectingDoctor(null)}
         />
       )}
     </div>
