@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 interface StatCardProps {
   value: string | number;
@@ -16,9 +16,19 @@ export const StatCard: React.FC<StatCardProps> = ({
   icon,
   trend,
 }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
-    <div className="bg-white rounded-2xl shadow-card p-6 border border-border">
-      <div className="flex items-start justify-between">
+    <div 
+      className="flex flex-col items-start p-6 gap-[10px] rounded-[12px] transition-colors cursor-pointer"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{
+        background: isHovered ? 'white' : 'rgba(0, 0, 0, 0.001)',
+        boxShadow: '0px 0px 0px 1px rgba(14, 63, 126, 0.04), 0px 1px 1px -0.5px rgba(42, 51, 69, 0.04), 0px 3px 3px -1.5px rgba(42, 51, 70, 0.04), 0px 6px 6px -3px rgba(42, 51, 70, 0.04), 0px 12px 12px -6px rgba(14, 63, 126, 0.04), 0px 24px 24px -12px rgba(14, 63, 126, 0.04)'
+      }}
+    >
+      <div className="flex items-start justify-between w-full">
         <div>
           <p className="text-4xl font-bold mb-1 text-navy">
             {value}

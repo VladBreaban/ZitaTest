@@ -95,19 +95,19 @@ export const Dashboard: React.FC = () => {
 
   return (
     <Layout>
-      <div className="max-w-[1200px] mx-auto w-full">
+      <div className="w-full">
         {/* Welcome header */}
-        <div className="mb-6">
-          <h1 className="text-heading-2 font-serif text-navy mb-1">
+        <div className="mb-8">
+          <h1 className="text-[32px] font-serif text-navy mb-1" style={{ fontWeight: 500 }}>
             Welcome back, Dr. {doctorName}
           </h1>
-          <p className="text-sm text-navy-light">
+          <p className="text-lg font-normal leading-[150%] tracking-[-0.01em] text-[#4A6A85]">
             Here's what's happening with your clients today
           </p>
         </div>
 
         {/* KPI Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           <StatCard
             value={stats?.activeClients ?? 0}
             label="Active clients"
@@ -132,90 +132,134 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Quick Actions */}
-        <div className="mb-5">
-          <h2 className="text-heading-3 font-serif text-navy">
+        <div className="mb-6">
+          <h2 className="text-[21px]  font-serif leading-[130%] tracking-[-0.01em] text-[#043B6C]">
             Quick actions
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
           {/* Create Recommendation */}
           <Link
-              to="/recommendations/create"
-              className="relative h-64 rounded-2xl overflow-hidden cursor-pointer group"
-              style={{
-                backgroundImage: "url('/quickaction-create.jpg')",
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-            >
+            to="/recommendations/create"
+            className="relative h-[372px] rounded-[12px] overflow-hidden cursor-pointer group"
+            style={{
+              backgroundImage: "url('/images/create-recomm.png')",
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
+            <div
+              className="absolute inset-0 bg-gradient-to-b from-black/10 to-black/80 group-hover:to-black/90 transition-all"
+            />
+            <div className="absolute top-4 right-4">
               <div
-                className="absolute inset-0 bg-gradient-to-b from-black/10 to-black/80 group-hover:to-black/90 transition-all"
-              />
-              <div className="absolute top-4 right-4">
-                <div className="w-9 h-9 rounded-full flex items-center justify-center bg-white/30 backdrop-blur-md">
-                  <span className="text-white text-xl leading-none">＋</span>
-                </div>
+                className="w-[60px] h-[60px] rounded-[130.435px] flex items-center justify-center"
+                style={{
+                  padding: '7.82609px 18.2609px',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  backgroundBlendMode: 'plus-lighter',
+                  boxShadow: 'inset 3.91304px 3.91304px 0.652174px -4.56522px rgba(255, 255, 255, 0.5), inset 0px 0px 28.6957px #F2F2F2',
+                  backdropFilter: 'blur(7.82609px)',
+                }}
+              >
+                <span className="text-white text-3xl leading-none">＋</span>
               </div>
-              <div className="absolute bottom-5 left-5 text-white">
-                <h3 className="font-semibold text-sm mb-1">Create Recommendation</h3>
-                <p className="text-[11px] opacity-90">Build personalized supplement plans</p>
-              </div>
-            </Link>
+            </div>
+            <div className="absolute bottom-5 left-5 text-white">
+              <h3 className="text-[21px] font-bold leading-[27px] tracking-[-0.18px] text-white mb-1">
+                Create Recommendation
+              </h3>
+              <p className="text-base font-normal leading-[27px] tracking-[-0.18px] text-white">
+                Build personalized supplement plans
+              </p>
+            </div>
+          </Link>
 
-            {/* Manage Clients */}
-            <Link
-              to="/clients"
-              className="relative h-64 rounded-2xl overflow-hidden cursor-pointer group"
-              style={{
-                backgroundImage: "url('/quickaction-clients.jpg')",
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-b from-orange/15 to-orange/90 group-hover:to-orange transition-all" />
-              <div className="absolute top-4 right-4">
-                <div className="w-9 h-9 rounded-full flex items-center justify-center bg-white/30 backdrop-blur-md">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+          {/* Manage Clients */}
+          <Link
+            to="/clients"
+            className="relative h-[372px] rounded-[12px] overflow-hidden cursor-pointer group"
+            style={{
+              backgroundImage: "url('/images/quickaction-clients.png')",
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-b from-orange/15 to-orange/90 group-hover:to-orange transition-all" />
+            <div className="absolute top-4 left-4">
+              <div
+                className="w-[60px] h-[60px] rounded-[130.435px] flex items-center justify-center"
+                style={{
+                  background: '#FFFFFF',
+                  backgroundBlendMode: 'plus-lighter',
+                  boxShadow: 'inset 3.91304px 3.91304px 0.652174px -4.56522px rgba(255, 255, 255, 0.5), inset 0px 0px 28.6957px #F2F2F2',
+                  backdropFilter: 'blur(7.82609px)',
+                }}
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF9933" strokeWidth="2">
+                  <line x1="7" y1="17" x2="17" y2="7" />
+                  <polyline points="7 7 17 7 17 17" />
+                </svg>
+              </div>
+            </div>
+            <div className="absolute bottom-5 left-5 text-white">
+              <h3 className="text-[21px] font-bold leading-[27px] tracking-[-0.18px] text-white mb-1">
+                Manage Clients
+              </h3>
+              <p className="text-base font-normal leading-[27px] tracking-[-0.18px] text-white">
+                View and add your clients
+              </p>
+            </div>
+          </Link>
+
+          {/* Earnings Overview */}
+          <Link to="/payouts">
+            <Card className="relative h-[372px] rounded-[12px] flex flex-col justify-between hover:shadow-md transition-shadow">
+              <div className="absolute top-4 left-4">
+                <div
+                  className="w-[60px] h-[60px] rounded-[130.435px] flex items-center justify-center"
+                  style={{
+                    background: '#FFFFFF',
+                    backgroundBlendMode: 'plus-lighter',
+                    boxShadow: 'inset 3.91304px 3.91304px 0.652174px -4.56522px rgba(255, 255, 255, 0.5), inset 0px 0px 28.6957px #F2F2F2',
+                    backdropFilter: 'blur(7.82609px)',
+                  }}
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF9933" strokeWidth="2">
                     <line x1="7" y1="17" x2="17" y2="7" />
                     <polyline points="7 7 17 7 17 17" />
                   </svg>
                 </div>
               </div>
-              <div className="absolute bottom-5 left-5 text-white">
-                <h3 className="font-semibold text-sm mb-1">Manage Clients</h3>
-                <p className="text-[11px] opacity-90">View and add your clients</p>
-              </div>
-            </Link>
 
-            {/* Earnings Overview */}
-            <Link to="/payouts">
-              <Card className="h-64 flex flex-col justify-between hover:shadow-md transition-shadow">
-                <div>
-                  <h3 className="font-semibold text-sm text-navy mb-1">Earnings Overview</h3>
-                  <p className="text-[11px] text-navy-light mb-3">Track your commission payouts</p>
-                  <div className="flex items-end gap-1">
-                    {[18, 10, 22, 8, 26, 14].map((h, i) => (
-                      <div
-                        key={i}
-                        className="w-2 rounded-sm"
-                        style={{
-                          height: `${h}px`,
-                          backgroundColor: i === 4 ? '#043B6C' : '#E5E7EB',
-                        }}
-                      />
-                    ))}
-                  </div>
+              <div className="pt-20">
+                <h3 className="text-[21px] font-bold leading-[27px] tracking-[-0.18px] text-[#043B6C] mb-1">
+                  Earnings Overview
+                </h3>
+                <p className="text-base font-normal leading-[27px] tracking-[-0.18px] text-[#4A6A85] mb-3">
+                  Track your commission payouts
+                </p>
+                <div className="flex items-end gap-1">
+                  {[18, 10, 22, 8, 26, 14].map((h, i) => (
+                    <div
+                      key={i}
+                      className="w-2 rounded-sm"
+                      style={{
+                        height: `${h}px`,
+                        backgroundColor: i === 4 ? '#043B6C' : '#E5E7EB',
+                      }}
+                    />
+                  ))}
                 </div>
-                <Button variant="outline" size="sm" className="text-[10px] uppercase">
-                  Documentation
-                </Button>
-              </Card>
-            </Link>
+              </div>
+            </Card>
+          </Link>
 
-            {/* Need Help */}
+          {/* Need Help */}
+          <div className="w-full md:w-[85%] lg:flex-[0.85]">
             <Card
-              className="relative h-64 flex flex-col justify-between text-white overflow-hidden"
+              className="relative h-[372px] rounded-[12px] flex flex-col justify-between text-white overflow-hidden"
               style={{
                 background: 'linear-gradient(135deg, #FF9B19 0%, #FF7A00 100%)',
               }}
@@ -250,70 +294,70 @@ export const Dashboard: React.FC = () => {
             </Card>
           </div>
 
+        </div>
+
         {/* Recent Activity */}
         <div>
-          <h2 className="text-heading-3 font-serif text-navy mb-5">
+          <h2 className="text-[21px] font-serif leading-[130%] tracking-[-0.01em] text-[#043B6C] mb-6">
             Recent Activity
           </h2>
-            <Card padding="none" className="overflow-hidden">
-              {loadingRecommendations ? (
-                <div className="p-8 text-center text-navy-light">Loading...</div>
-              ) : recentRecommendations.length === 0 ? (
-                <div className="p-8 text-center text-navy-light">No recent activity</div>
-              ) : (
-                <Table>
-                  <Table.Header>
-                    <Table.Row>
-                      <Table.Head>Protocol</Table.Head>
-                      <Table.Head>Client</Table.Head>
-                      <Table.Head>Email</Table.Head>
-                      <Table.Head>Created</Table.Head>
-                      <Table.Head>Status</Table.Head>
-                      <Table.Head>Commission</Table.Head>
-                      <Table.Head>Action</Table.Head>
-                    </Table.Row>
-                  </Table.Header>
-                  <Table.Body>
-                    {recentRecommendations.map((rec) => (
-                      <Table.Row key={rec.id}>
-                        <Table.Cell>
-                          <div className="text-sm font-medium text-primary">{rec.protocolName}</div>
-                          {rec.shortDescription && (
-                            <div className="text-xs text-navy-lighter mt-0.5">{rec.shortDescription}</div>
-                          )}
-                        </Table.Cell>
-                        <Table.Cell className="font-semibold text-navy">
-                          {rec.clientFirstName} {rec.clientLastName}
-                        </Table.Cell>
-                        <Table.Cell className="text-navy-light">{rec.clientEmail}</Table.Cell>
-                        <Table.Cell className="text-navy-light">
-                          {new Date(rec.createdAt).toLocaleDateString()}
-                        </Table.Cell>
-                        <Table.Cell>
-                          <Badge variant={
-                            rec.status === 'purchased' ? 'achieved' :
-                            rec.status === 'viewed' ? 'visualized' :
+          {loadingRecommendations ? (
+            <div className="p-8 text-center text-navy-light">Loading...</div>
+          ) : recentRecommendations.length === 0 ? (
+            <div className="p-8 text-center text-navy-light">No recent activity</div>
+          ) : (
+            <Table>
+              <Table.Header>
+                <Table.Row isHeader={true}>
+                  <Table.Head>Protocol</Table.Head>
+                  <Table.Head>Client</Table.Head>
+                  <Table.Head>Email</Table.Head>
+                  <Table.Head>Created</Table.Head>
+                  <Table.Head>Status</Table.Head>
+                  <Table.Head>Commission</Table.Head>
+                  <Table.Head>Action</Table.Head>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {recentRecommendations.map((rec) => (
+                  <Table.Row key={rec.id}>
+                    <Table.Cell>
+                      <div className="text-sm font-medium text-primary">{rec.protocolName}</div>
+                      {rec.shortDescription && (
+                        <div className="text-xs text-navy-lighter mt-0.5">{rec.shortDescription}</div>
+                      )}
+                    </Table.Cell>
+                    <Table.Cell className="font-bold text-lg leading-[27px] tracking-[-0.18px] text-[#043B6C]">
+                      {rec.clientFirstName} {rec.clientLastName}
+                    </Table.Cell>
+                    <Table.Cell className="text-navy-light">{rec.clientEmail}</Table.Cell>
+                    <Table.Cell className="text-navy-light">
+                      {new Date(rec.createdAt).toLocaleDateString()}
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Badge variant={
+                        rec.status === 'purchased' ? 'achieved' :
+                          rec.status === 'viewed' ? 'visualized' :
                             rec.status === 'draft' ? 'draft' : 'new'
-                          }>
-                            {rec.status.charAt(0).toUpperCase() + rec.status.slice(1)}
-                          </Badge>
-                        </Table.Cell>
-                        <Table.Cell className="font-semibold text-navy">
-                          {rec.commissionAmount.toFixed(2)} lei
-                        </Table.Cell>
-                        <Table.Cell>
-                          <button className="text-sm font-medium text-blue-500 hover:text-blue-600">
-                            View
-                          </button>
-                        </Table.Cell>
-                      </Table.Row>
-                    ))}
-                  </Table.Body>
-                </Table>
-              )}
-            </Card>
-          </div>
+                      }>
+                        {rec.status.charAt(0).toUpperCase() + rec.status.slice(1)}
+                      </Badge>
+                    </Table.Cell>
+                    <Table.Cell className="font-semibold text-navy">
+                      {rec.commissionAmount.toFixed(2)} lei
+                    </Table.Cell>
+                    <Table.Cell>
+                      <button className="text-sm font-medium text-blue-500 hover:text-blue-600">
+                        View
+                      </button>
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table>
+          )}
         </div>
+      </div>
     </Layout>
   );
 };

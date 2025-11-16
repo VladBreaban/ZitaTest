@@ -9,6 +9,11 @@ interface MenuItem {
   badgeKey?: string;
 }
 
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
 const menuItems: MenuItem[] = [
   {
     icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>,
@@ -38,7 +43,7 @@ const menuItems: MenuItem[] = [
   },
 ];
 
-export const Sidebar: React.FC = () => {
+export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const location = useLocation();
   const [badges, setBadges] = useState<{ [key: string]: number }>({});
 
@@ -48,7 +53,6 @@ export const Sidebar: React.FC = () => {
 
   const loadBadgeCounts = async () => {
     try {
-      // Fetch client count
       const clientsData = await clientService.getClients(undefined, undefined, 1, 1);
       setBadges({
         clientsCount: clientsData.totalCount
@@ -59,12 +63,30 @@ export const Sidebar: React.FC = () => {
   };
 
   return (
-    <div className="w-64 bg-white h-screen fixed left-0 top-0 flex flex-col z-50 border-r border-border">
+    <div className={`
+      w-64 bg-[#F7F7F9] h-screen fixed left-0 top-0 flex flex-col z-50
+      transform transition-transform duration-300 ease-in-out
+      ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+    `}>
       <div className="px-6 py-6">
-        <img src="/zitamine_logo.png" alt="Zitamine PRO" className="h-7" />
+        <img src="/zitamine_logo.png" alt="Zitamine PRO" className="h-auto w-[70%]" />
       </div>
 
-      <nav className="flex-1 px-3 py-2">
+      <div className="lg:hidden px-4 pb-4">
+        <div className="relative">
+          <svg className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            type="text"
+            placeholder="Search"
+            className="pl-9 pr-4 h-[50px] border border-[#EBEBEB] rounded-[12px] w-full text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+            style={{ background: 'rgba(255, 255, 255, 0.8)' }}
+          />
+        </div>
+      </div>
+
+      <nav className="flex-1 pr-4 pt-4 lg:pt-20">
         {menuItems.map((item) => {
           const isActive = location.pathname === item.path ||
                           (item.path === '/recommendations' && location.pathname.startsWith('/recommendations'));
@@ -74,21 +96,27 @@ export const Sidebar: React.FC = () => {
             <Link
               key={item.path}
               to={item.path}
-              className={`flex items-center gap-3 px-4 py-3 mb-1 rounded-xl transition-all text-sm ${
+              onClick={() => onClose()}
+              className={`flex items-center gap-3 px-4 py-3 mb-1 transition-all duration-200 text-base font-medium leading-[27px] tracking-[-0.18px] rounded-r-[12px] ${
                 isActive
-                  ? 'bg-primary text-white font-semibold shadow-primary'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                  ? 'bg-primary text-white font-semibold'
+                  : 'text-[#043B6C] hover:bg-white/80 hover:text-primary hover:shadow-sm hover:translate-x-1'
               }`}
+              style={isActive ? {
+                boxShadow: '0px 0px 0px 1px rgba(14, 63, 126, 0.04), 0px 1px 1px -0.5px rgba(42, 51, 69, 0.04), 0px 3px 3px -1.5px rgba(42, 51, 70, 0.04), 0px 6px 6px -3px rgba(42, 51, 70, 0.04), 0px 12px 12px -6px rgba(14, 63, 126, 0.04), 0px 24px 24px -12px rgba(14, 63, 126, 0.04)'
+              } : undefined}
             >
               <span className="flex-shrink-0">{item.icon}</span>
-              <span className="flex-1">{item.label}</span>
-              {badgeValue !== undefined && badgeValue > 0 && (
-                <span className={`flex-shrink-0 w-5 h-5 rounded-full text-xs flex items-center justify-center font-medium ${
-                  isActive ? 'bg-white/30 text-white' : 'bg-primary text-white'
-                }`}>
-                  {badgeValue}
-                </span>
-              )}
+              <div className="flex items-center gap-2">
+                <span>{item.label}</span>
+                {badgeValue !== undefined && badgeValue > 0 && (
+                  <span className={`flex-shrink-0 w-5 h-4 rounded-full text-xs flex items-center justify-center font-medium ${
+                    isActive ? 'bg-white/30 text-white' : 'bg-[#4CA7F8] text-white'
+                  }`}>
+                    {badgeValue}
+                  </span>
+                )}
+              </div>
             </Link>
           );
         })}
