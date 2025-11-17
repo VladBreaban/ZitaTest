@@ -7,3 +7,4 @@ export { FormField, Input, TextArea, Select } from './FormField';
 export { Tabs } from './Tabs';
 export { Stepper } from './Stepper';
 export { Modal } from './Modal';
+export { CustomSelect } from './CustomSelect';

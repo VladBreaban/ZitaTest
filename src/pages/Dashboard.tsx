@@ -107,28 +107,37 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* KPI Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-          <StatCard
-            value={stats?.activeClients ?? 0}
-            label="Active clients"
-            icon={UsersIcon}
-          />
-          <StatCard
-            value={`${(stats?.totalCommissions ?? 0).toFixed(2)} lei`}
-            label="Total commissions"
-            icon={DollarIcon}
-            trend={stats?.thisMonthCommissions ? { value: `+${stats.thisMonthCommissions.toFixed(2)} lei this month`, positive: true } : undefined}
-          />
-          <StatCard
-            value={stats?.pendingOrders ?? 0}
-            label="Pending order"
-            icon={DotsIcon}
-          />
-          <StatCard
-            value={stats?.totalRecommendations ?? 0}
-            label="Total Recommendations"
-            icon={FileIcon}
-          />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:flex gap-6 mb-10">
+          <div className="lg:flex-1">
+            <StatCard
+              value={stats?.activeClients ?? 0}
+              label="Active clients"
+              icon={<img src="/images/people-like, inner circle.svg" alt="" className="w-6 h-6" />}
+            />
+          </div>
+          <div className="lg:w-[calc(25%+150px)]">
+            <StatCard
+              value={`${(stats?.totalCommissions ?? 0).toFixed(2)} lei`}
+              label="Total commissions"
+              icon={<img src="/images/money-hand, coins.svg" alt="" className="w-6 h-6" />}
+              trend={stats?.thisMonthCommissions ? { value: `+${stats.thisMonthCommissions.toFixed(2)} lei this month`, positive: true } : undefined}
+              isWhite={true}
+            />
+          </div>
+          <div className="lg:flex-1">
+            <StatCard
+              value={stats?.pendingOrders ?? 0}
+              label="Pending order"
+              icon={<img src="/images/box-sparkle, magic box.svg" alt="" className="w-6 h-6" />}
+            />
+          </div>
+          <div className="lg:flex-1">
+            <StatCard
+              value={stats?.totalRecommendations ?? 0}
+              label="Total Recommendations"
+              icon={<img src="/images/window-sparkle, whisper, api, app, software.svg" alt="" className="w-6 h-6" />}
+            />
+          </div>
         </div>
 
         {/* Quick Actions */}
@@ -138,11 +147,11 @@ export const Dashboard: React.FC = () => {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:flex-row gap-6 mb-10">
           {/* Create Recommendation */}
           <Link
             to="/recommendations/create"
-            className="relative h-[372px] rounded-[12px] overflow-hidden cursor-pointer group"
+            className="relative h-[372px] rounded-[12px] overflow-hidden cursor-pointer group lg:flex-1"
             style={{
               backgroundImage: "url('/images/create-recomm.png')",
               backgroundSize: 'cover',
@@ -179,7 +188,7 @@ export const Dashboard: React.FC = () => {
           {/* Manage Clients */}
           <Link
             to="/clients"
-            className="relative h-[372px] rounded-[12px] overflow-hidden cursor-pointer group"
+            className="relative h-[372px] rounded-[12px] overflow-hidden cursor-pointer group lg:flex-1"
             style={{
               backgroundImage: "url('/images/quickaction-clients.png')",
               backgroundSize: 'cover',
@@ -214,8 +223,8 @@ export const Dashboard: React.FC = () => {
           </Link>
 
           {/* Earnings Overview */}
-          <Link to="/payouts">
-            <Card className="relative h-[372px] rounded-[12px] flex flex-col justify-between hover:shadow-md transition-shadow">
+          <Link to="/payouts" className="lg:flex-1">
+            <Card className="relative h-[372px] rounded-[12px] flex flex-col justify-between hover:shadow-md transition-shadow overflow-hidden">
               <div className="absolute top-4 left-4">
                 <div
                   className="w-[60px] h-[60px] rounded-[130.435px] flex items-center justify-center"
@@ -233,67 +242,69 @@ export const Dashboard: React.FC = () => {
                 </div>
               </div>
 
-              <div className="pt-20">
+              {/* Cards image - top right */}
+              <img
+                src="/images/cards.svg"
+                alt=""
+                className="absolute top-0 right-0 w-auto h-auto scale-90 origin-top-right"
+              />
+
+              <div className="pt-20 relative z-10">
                 <h3 className="text-[21px] font-bold leading-[27px] tracking-[-0.18px] text-[#043B6C] mb-1">
                   Earnings Overview
                 </h3>
                 <p className="text-base font-normal leading-[27px] tracking-[-0.18px] text-[#4A6A85] mb-3">
                   Track your commission payouts
                 </p>
-                <div className="flex items-end gap-1">
-                  {[18, 10, 22, 8, 26, 14].map((h, i) => (
-                    <div
-                      key={i}
-                      className="w-2 rounded-sm"
-                      style={{
-                        height: `${h}px`,
-                        backgroundColor: i === 4 ? '#043B6C' : '#E5E7EB',
-                      }}
-                    />
-                  ))}
-                </div>
               </div>
+
+              <img
+                src="/images/earnings-chart.svg"
+                alt=""
+                className="absolute bottom-0 left-0 w-full h-auto scale-90 bottom-0"
+              />
             </Card>
           </Link>
 
           {/* Need Help */}
-          <div className="w-full md:w-[85%] lg:flex-[0.85]">
+          <div className="lg:flex-[0.85]">
             <Card
               className="relative h-[372px] rounded-[12px] flex flex-col justify-between text-white overflow-hidden"
               style={{
                 background: 'linear-gradient(135deg, #FF9B19 0%, #FF7A00 100%)',
               }}
             >
-              <div
-                className="absolute inset-0 opacity-35"
-                style={{
-                  backgroundImage: "url('/Group.png')",
-                  backgroundRepeat: 'no-repeat',
-                  backgroundPosition: 'center',
-                  backgroundSize: '220%',
-                }}
+
+
+              <img
+                src="/images/white-circles.svg"
+                alt="" style={{ bottom: -150, right: -30, width: '100%' }}
+                className="absolute bottom-0 right-0 w-auto h-auto"
               />
+
               <div className="relative">
-                <div className="w-11 h-11 rounded-full flex items-center justify-center mb-3 bg-white/25 backdrop-blur-sm">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                <div className="w-11 h-11 rounded-[12px] flex items-center justify-center mb-3 bg-[#fff] backdrop-blur-sm">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9.58407 0C4.29286 0 0 4.29286 0 9.58407C0 14.8753 4.29286 19.1681 9.58407 19.1681C14.8753 19.1681 19.1681 14.8753 19.1681 9.58407C19.1681 4.29286 14.8753 0 9.58407 0ZM9.28457 15.1748C9.08711 15.1748 8.89409 15.1162 8.72992 15.0065C8.56574 14.8968 8.43778 14.7409 8.36222 14.5585C8.28666 14.3761 8.26689 14.1753 8.30541 13.9817C8.34393 13.788 8.43901 13.6101 8.57863 13.4705C8.71825 13.3309 8.89614 13.2358 9.0898 13.1973C9.28346 13.1588 9.48419 13.1785 9.66661 13.2541C9.84904 13.3296 10.005 13.4576 10.1147 13.6218C10.2244 13.786 10.2829 13.979 10.2829 14.1764C10.2829 14.4412 10.1777 14.6951 9.9905 14.8824C9.80328 15.0696 9.54934 15.1748 9.28457 15.1748V15.1748ZM10.9538 10.0832C10.1446 10.6263 10.0333 11.124 10.0333 11.5807C10.0333 11.7661 9.95969 11.9438 9.82864 12.0749C9.69758 12.206 9.51983 12.2796 9.33448 12.2796C9.14914 12.2796 8.97139 12.206 8.84033 12.0749C8.70927 11.9438 8.63565 11.7661 8.63565 11.5807C8.63565 10.4871 9.13881 9.61751 10.1741 8.92217C11.1365 8.27624 11.6806 7.86692 11.6806 6.96692C11.6806 6.35494 11.3312 5.89021 10.6079 5.54628C10.4377 5.46541 10.0588 5.38655 9.59256 5.39204C9.00753 5.39952 8.55328 5.53929 8.20336 5.82082C7.54346 6.35194 7.48755 6.92998 7.48755 6.93847C7.48313 7.03024 7.46067 7.12024 7.42146 7.20334C7.38226 7.28643 7.32707 7.36099 7.25904 7.42275C7.19102 7.48452 7.1115 7.53228 7.02502 7.56331C6.93854 7.59434 6.84679 7.60804 6.75502 7.60361C6.66325 7.59919 6.57325 7.57673 6.49015 7.53752C6.40706 7.49831 6.3325 7.44312 6.27074 7.3751C6.20897 7.30708 6.16121 7.22756 6.13018 7.14108C6.09915 7.0546 6.08545 6.96285 6.08988 6.87108C6.09537 6.74978 6.17973 5.6571 7.32632 4.73463C7.92083 4.25642 8.67708 4.00784 9.57259 3.99686C10.2065 3.98937 10.802 4.09669 11.2059 4.28737C12.4144 4.85892 13.0783 5.81184 13.0783 6.96692C13.0783 8.65561 11.9496 9.41385 10.9538 10.0832Z" fill="#FA9C19" />
                   </svg>
                 </div>
-                <h3 className="font-semibold text-sm mb-1">Need help?</h3>
-                <p className="text-[11px] opacity-90">Please check our docs</p>
+                <h3 className="font-semibold text-[15px] mb-1">Need help?</h3>
+                <p className="text-[12px] opacity-90">Please check our docs</p>
+
+                <img
+                  src="/images/zita-heart-white.svg"
+                  alt=""
+                  className="mt-4 w-auto h-auto"
+                />
               </div>
+
               <div className="relative">
-                <Button
-                  className="w-full !bg-white !text-orange hover:!bg-white/90 text-[10px] uppercase !shadow-none"
-                >
+                <Button className="w-full !bg-white !text-[#2D3748] hover:!bg-white/90 font-bold text-[12px] leading-[150%] uppercase !shadow-none !rounded-[12px]">
                   Documentation
                 </Button>
               </div>
             </Card>
           </div>
-
         </div>
 
         {/* Recent Activity */}

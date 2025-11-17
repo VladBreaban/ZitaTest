@@ -57,10 +57,12 @@ Table.Body = ({ children }) => (
 
 Table.Row = ({ children, className = '', isHeader = false }) => (
   <tr 
-    className={`${isHeader ? '' : 'hover:bg-white'} transition-colors rounded-[12px] ${className}`}
+    className={`${isHeader ? '' : 'hover:bg-white'} transition-colors ${className}`}
     style={isHeader ? {} : {
       background: 'rgba(0, 0, 0, 0.001)',
       boxShadow: '0px 0px 0px 1px rgba(14, 63, 126, 0.04), 0px 1px 1px -0.5px rgba(42, 51, 69, 0.04), 0px 3px 3px -1.5px rgba(42, 51, 70, 0.04), 0px 6px 6px -3px rgba(42, 51, 70, 0.04), 0px 12px 12px -6px rgba(14, 63, 126, 0.04), 0px 24px 24px -12px rgba(14, 63, 126, 0.04)',
+      borderRadius: '12px',
+      height: '75px'
     }}
   >
     {children}
@@ -74,7 +76,12 @@ Table.Head = ({ children, className = '' }) => (
 );
 
 Table.Cell = ({ children, className = '' }) => (
-  <td className={`px-8 py-6 text-sm first:rounded-l-[12px] last:rounded-r-[12px] ${className}`}>
+  <td 
+    className={`text-sm first:rounded-l-[12px] last:rounded-r-[12px] ${className}`}
+    style={{
+      padding: '24px 32px'
+    }}
+  >
     {children}
   </td>
 );
