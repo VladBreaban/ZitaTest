@@ -91,21 +91,35 @@ export const ClientDetails: React.FC = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                 </svg>
               </Link>
-              <h1 className="text-heading-2 font-serif text-navy">
+              <h1 className="text-[32px] font-serif text-navy" style={{ fontWeight: 500 }}>
                 {client.firstName} {client.lastName}
               </h1>
               <Badge variant={client.status as 'active' | 'inactive'}>
                 {client.status.charAt(0).toUpperCase() + client.status.slice(1)}
               </Badge>
             </div>
-            <p className="text-sm text-navy-light ml-8">{client.email}</p>
+            <p className="text-lg font-normal leading-[150%] tracking-[-0.01em] text-[#4A6A85] ml-8">
+              {client.email}
+            </p>
           </div>
           <div className="flex gap-3">
             <Button
               onClick={() => navigate('/recommendations/create')}
               icon={<span className="text-lg leading-none">+</span>}
             >
-              Create Recommendation
+              <span style={{
+                fontFamily: 'Inter',
+                fontStyle: 'normal',
+                fontWeight: 700,
+                fontSize: '16px',
+                lineHeight: '27px',
+                display: 'flex',
+                alignItems: 'center',
+                letterSpacing: '-0.18px',
+                color: '#FFFFFF'
+              }}>
+                Create Recommendation
+              </span>
             </Button>
           </div>
         </div>
@@ -115,7 +129,9 @@ export const ClientDetails: React.FC = () => {
           <div className="lg:col-span-2 space-y-6">
             {/* Recommendations */}
             <Card>
-              <h2 className="text-lg font-semibold text-navy mb-4">Recommendations History</h2>
+              <h2 className="text-[21px] font-serif leading-[130%] tracking-[-0.01em] text-[#043B6C] mb-4">
+                Recommendations History
+              </h2>
               {loadingRecommendations ? (
                 <div className="p-8 text-center text-navy-light">Loading...</div>
               ) : recommendations.length === 0 ? (
@@ -123,7 +139,7 @@ export const ClientDetails: React.FC = () => {
               ) : (
                 <Table>
                   <Table.Header>
-                    <Table.Row>
+                    <Table.Row isHeader={true}>
                       <Table.Head>Protocol</Table.Head>
                       <Table.Head>Created</Table.Head>
                       <Table.Head>Status</Table.Head>
@@ -135,7 +151,18 @@ export const ClientDetails: React.FC = () => {
                     {recommendations.map((rec) => (
                       <Table.Row key={rec.id}>
                         <Table.Cell>
-                          <div className="text-sm font-medium text-primary">{rec.protocolName}</div>
+                          <div
+                            style={{
+                              fontStyle: 'normal',
+                              fontWeight: 500,
+                              fontSize: '18px',
+                              lineHeight: '27px',
+                              letterSpacing: '-0.18px',
+                              color: '#4CA7F8'
+                            }}
+                          >
+                            {rec.protocolName}
+                          </div>
                           {rec.shortDescription && (
                             <div className="text-xs text-navy-lighter mt-0.5">{rec.shortDescription}</div>
                           )}
@@ -154,7 +181,8 @@ export const ClientDetails: React.FC = () => {
                         <Table.Cell>
                           <button
                             onClick={() => navigate(`/recommendations/${rec.id}`)}
-                            className="text-primary hover:text-primary-hover text-xs font-medium"
+                            className="hover:opacity-80 font-medium transition-opacity"
+                            style={{ color: '#4CA7F8' }}
                           >
                             View
                           </button>
@@ -171,7 +199,9 @@ export const ClientDetails: React.FC = () => {
           <div className="space-y-6">
             {/* Client Info */}
             <Card>
-              <h2 className="text-lg font-semibold text-navy mb-4">Contact Information</h2>
+              <h2 className="text-[21px] font-serif leading-[130%] tracking-[-0.01em] text-[#043B6C] mb-4">
+                Contact Information
+              </h2>
               <div className="space-y-3 text-sm">
                 <div>
                   <div className="text-navy-lighter mb-1">Email</div>
@@ -198,7 +228,9 @@ export const ClientDetails: React.FC = () => {
 
             {/* Statistics */}
             <Card>
-              <h2 className="text-lg font-semibold text-navy mb-4">Statistics</h2>
+              <h2 className="text-[21px] font-serif leading-[130%] tracking-[-0.01em] text-[#043B6C] mb-4">
+                Statistics
+              </h2>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-navy-lighter">Total Recommendations</span>
