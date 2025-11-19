@@ -40,10 +40,7 @@ export const Recommendations: React.FC = () => {
 
   const sortOptions = [
     { value: '', label: 'Recente' },
-    { value: 'draft', label: 'Draft' },
-    { value: 'new', label: 'New' },
-    { value: 'viewed', label: 'Viewed' },
-    { value: 'purchased', label: 'Purchased' }
+
   ];
 
   return (

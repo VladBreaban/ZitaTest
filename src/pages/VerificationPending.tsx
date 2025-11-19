@@ -48,7 +48,7 @@ export const VerificationPending: React.FC = () => {
         </div>
 
         {/* CONTENT */}
-        <div className="relative flex flex-col " style={{justifyContent: 'center', height: '100%' }}>
+        <div className="relative flex flex-col " style={{justifyContent: 'center', height: '100%', maxHeight: 500 }}>
           <div className="max-w-md text-center">
             <div className="mb-8">
               <span className='step-text' style={{textAlign: 'start'}}>Pasul 3</span>
@@ -60,7 +60,7 @@ export const VerificationPending: React.FC = () => {
               </p>
             </div>
 
-            <button
+            {/* <button
               onClick={() => navigate('/dashboard')}
               className="w-full orange-fill-btn flex items-center justify-center gap-2 rounded-full text-white transition-all shadow-md"
               style={{
@@ -82,7 +82,7 @@ export const VerificationPending: React.FC = () => {
                 <line x1="5" y1="12" x2="19" y2="12" />
                 <polyline points="12 5 19 12 12 19" />
               </svg>
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

@@ -21,6 +21,10 @@ export interface LoginResponse {
   role: string;
   status: string;
   expiresAt: string;
+  clientDiscountCode?: string;
+  personalDiscountCode?: string;
+  iban?: string;
+  phone?: string;
 }
 
 export interface ApiResponse<T> {

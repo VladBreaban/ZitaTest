@@ -267,7 +267,7 @@ export const Dashboard: React.FC = () => {
           </Link>
 
           {/* Need Help */}
-          <div className="lg:flex-[0.85]">
+          <div className="lg:flex-[0.75]">
             <Card
               className="relative h-[372px] rounded-[12px] flex flex-col justify-between text-white overflow-hidden"
               style={{
