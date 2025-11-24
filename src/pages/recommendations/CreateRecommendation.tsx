@@ -44,6 +44,7 @@ export const CreateRecommendation: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [offeringLink, setOfferingLink] = useState('');
   const [loading, setLoading] = useState(isEditMode);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     if (isEditMode && id) {
@@ -179,55 +180,128 @@ export const CreateRecommendation: React.FC = () => {
 
   return (
     <Layout>
-      <div >
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-heading-2 font-serif text-navy mb-1">
-            {isEditMode ? 'Edit Recommendation' : 'Create New Recommendation'}
-          </h1>
-          <p className="text-sm text-navy-light">
-            {isEditMode
-              ? 'Update your personalized supplement plan.'
-              : 'Build a personalized supplement plan for your client.'}
-          </p>
-        </div>
+      <div>
+        {/* Sticky Header with Title, Description and Button */}
+        <div 
+          className="sticky top-0 z-40 pb-4 -mt-2 pt-2"
+          style={{
+            background: '#F5F7FA',
+          }}
+        >
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h1 className="text-[32px] font-serif text-navy mb-1" style={{ fontWeight: 500 }}>
+                {isEditMode ? 'Edit Recommendation' : 'Create New Recommendation'}
+              </h1>
+              <p className="text-lg font-normal leading-[150%] tracking-[-0.01em] text-[#4A6A85]">
+                {isEditMode
+                  ? 'Update your personalized supplement plan.'
+                  : 'Build a personalized supplement plan for your client.'}
+              </p>
+            </div>
+            {currentStep < 3 && (
+              <Button onClick={handleNext} disabled={currentStep === 1 && selectedProducts.length === 0}>
+                <span style={{
+                  fontFamily: 'Inter',
+                  fontStyle: 'normal',
+                  fontWeight: 700,
+                  fontSize: '16px',
+                  lineHeight: '27px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  letterSpacing: '-0.18px',
+                  color: '#FFFFFF'
+                }}>
+                  Continue
+                </span>
+              </Button>
+            )}
+            {currentStep === 3 && (
+              <Button onClick={handleSubmit}>
+                <span style={{
+                  fontFamily: 'Inter',
+                  fontStyle: 'normal',
+                  fontWeight: 700,
+                  fontSize: '16px',
+                  lineHeight: '27px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  letterSpacing: '-0.18px',
+                  color: '#FFFFFF'
+                }}>
+                  Create Recommendation
+                </span>
+              </Button>
+            )}
+          </div>
 
-        {/* Stepper */}
-        <div className="mb-8">
-          <Stepper steps={steps} currentStep={currentStep} />
+          {/* Stepper and Search Row */}
+          <div className="flex items-center justify-between">
+            <Stepper steps={steps} currentStep={currentStep} />
+            {currentStep === 1 && (
+              <div className="relative">
+                <svg 
+                  className="w-4 h-4 absolute left-4 top-1/2 transform -translate-y-1/2 text-navy-lighter" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  style={{
+                    width: '400px',
+                    height: '50px',
+                    background: 'rgba(255, 255, 255, 0.8)',
+                    border: '1px solid #EBEBEB',
+                    borderRadius: '12px',
+                  }}
+                />
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Step Content */}
-        {currentStep === 1 && (
-          <Step1SelectProducts
-            selectedProducts={selectedProducts}
-            onSelectProducts={setSelectedProducts}
-            onNext={handleNext}
-            onCancel={handleCancel}
-          />
-        )}
+        <div className="mt-8">
+          {currentStep === 1 && (
+            <Step1SelectProducts
+              selectedProducts={selectedProducts}
+              onSelectProducts={setSelectedProducts}
+              onNext={handleNext}
+              onCancel={handleCancel}
+              search={search}
+              onSearchChange={setSearch}
+            />
+          )}
 
-        {currentStep === 2 && (
-          <Step2AddDetails
-            selectedProducts={selectedProducts}
-            onUpdateProducts={setSelectedProducts}
-            protocolDetails={protocolDetails}
-            onUpdateProtocol={setProtocolDetails}
-            onNext={handleNext}
-            onBack={handleBack}
-          />
-        )}
+          {currentStep === 2 && (
+            <Step2AddDetails
+              selectedProducts={selectedProducts}
+              onUpdateProducts={setSelectedProducts}
+              protocolDetails={protocolDetails}
+              onUpdateProtocol={setProtocolDetails}
+              onNext={handleNext}
+              onBack={handleBack}
+            />
+          )}
 
-        {currentStep === 3 && (
-          <Step3ClientInfo
-            clientInfo={clientInfo}
-            onUpdateClient={setClientInfo}
-            selectedProducts={selectedProducts}
-            protocolDetails={protocolDetails}
-            onBack={handleBack}
-            onSubmit={handleSubmit}
-          />
-        )}
+          {currentStep === 3 && (
+            <Step3ClientInfo
+              clientInfo={clientInfo}
+              onUpdateClient={setClientInfo}
+              selectedProducts={selectedProducts}
+              protocolDetails={protocolDetails}
+              onBack={handleBack}
+              onSubmit={handleSubmit}
+            />
+          )}
+        </div>
 
         {/* Offering Link Modal */}
         <Modal
