@@ -15,9 +15,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       style={{ background: 'linear-gradient(121.62deg, #F7F7F9 30.95%, #FFF8EF 97.13%)' }}
     >
       <img 
-        src="images/dashboard-ellipse.svg" 
+        src="/images/dashboard-ellipse.svg" 
         alt="" 
-        className="absolute top-0 right-0 pointer-events-none"
+        className="absolute top-0 right-0 pointer-events-none z-50"
       />
       
       {isSidebarOpen && (

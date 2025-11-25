@@ -11,6 +11,7 @@ interface Props {
   onCancel: () => void;
   search: string;
   onSearchChange: (value: string) => void;
+  onProductAdded: (toast: { message: string; productName: string; productImage: string }) => void;
 }
 
 export const Step1SelectProducts: React.FC<Props> = ({
@@ -20,6 +21,7 @@ export const Step1SelectProducts: React.FC<Props> = ({
   onCancel,
   search,
   onSearchChange,
+  onProductAdded,
 }) => {
   const [products, setProducts] = useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = useState(true);
@@ -100,6 +102,12 @@ export const Step1SelectProducts: React.FC<Props> = ({
           notes: '',
         },
       ]);
+      
+      onProductAdded({
+        message: 'Produsul a fost adăugat în coș',
+        productName: product.title,
+        productImage: product.images?.[0]?.src || '',
+      });
     }
   };
 
@@ -169,45 +177,45 @@ export const Step1SelectProducts: React.FC<Props> = ({
         {/* Product Type Filters */}
         <div className="flex items-center gap-2 mb-6 flex-wrap">
           {[
-            { 
-              name: 'Toate Produsele', 
+            {
+              name: 'Toate Produsele',
               icon: (isSelected: boolean) => (
                 <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M13.75 4.5C13.75 6.57107 12.0711 8.25 10 8.25C7.92893 8.25 6.25 6.57107 6.25 4.5C6.25 2.42893 7.92893 0.75 10 0.75C12.0711 0.75 13.75 2.42893 13.75 4.5Z" stroke={isSelected ? "#FFFFFF" : "#FA9C19"} strokeWidth="1.5"/>
-                  <path d="M8.25 14C8.25 16.0711 6.57107 17.75 4.5 17.75C2.42893 17.75 0.75 16.0711 0.75 14C0.75 11.9289 2.42893 10.25 4.5 10.25C6.57107 10.25 8.25 11.9289 8.25 14Z" stroke={isSelected ? "#FFFFFF" : "#FA9C19"} strokeWidth="1.5"/>
-                  <path d="M19.25 14C19.25 16.0711 17.5711 17.75 15.5 17.75C13.4289 17.75 11.75 16.0711 11.75 14C11.75 11.9289 13.4289 10.25 15.5 10.25C17.5711 10.25 19.25 11.9289 19.25 14Z" stroke={isSelected ? "#FFFFFF" : "#FA9C19"} strokeWidth="1.5"/>
+                  <path d="M13.75 4.5C13.75 6.57107 12.0711 8.25 10 8.25C7.92893 8.25 6.25 6.57107 6.25 4.5C6.25 2.42893 7.92893 0.75 10 0.75C12.0711 0.75 13.75 2.42893 13.75 4.5Z" stroke={isSelected ? "#FFFFFF" : "#FA9C19"} strokeWidth="1.5" />
+                  <path d="M8.25 14C8.25 16.0711 6.57107 17.75 4.5 17.75C2.42893 17.75 0.75 16.0711 0.75 14C0.75 11.9289 2.42893 10.25 4.5 10.25C6.57107 10.25 8.25 11.9289 8.25 14Z" stroke={isSelected ? "#FFFFFF" : "#FA9C19"} strokeWidth="1.5" />
+                  <path d="M19.25 14C19.25 16.0711 17.5711 17.75 15.5 17.75C13.4289 17.75 11.75 16.0711 11.75 14C11.75 11.9289 13.4289 10.25 15.5 10.25C17.5711 10.25 19.25 11.9289 19.25 14Z" stroke={isSelected ? "#FFFFFF" : "#FA9C19"} strokeWidth="1.5" />
                 </svg>
               )
             },
-            { 
-              name: 'Suplimente Funcționale & Longevitate', 
+            {
+              name: 'Suplimente Funcționale & Longevitate',
               icon: (isSelected: boolean) => (
                 <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M0.75 9.65998H4.26711C4.70339 9.65998 5.08932 9.37714 5.2207 8.96111L7.7585 0.924717C7.83236 0.690858 8.16372 0.692081 8.23585 0.926479L13.758 18.8736C13.8307 19.1097 14.1654 19.1086 14.2364 18.8719L16.7862 10.3726C16.9131 9.94965 17.3024 9.65998 17.744 9.65998H21.25" stroke={isSelected ? "#FFFFFF" : "#4CA7F8"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M0.75 9.65998H4.26711C4.70339 9.65998 5.08932 9.37714 5.2207 8.96111L7.7585 0.924717C7.83236 0.690858 8.16372 0.692081 8.23585 0.926479L13.758 18.8736C13.8307 19.1097 14.1654 19.1086 14.2364 18.8719L16.7862 10.3726C16.9131 9.94965 17.3024 9.65998 17.744 9.65998H21.25" stroke={isSelected ? "#FFFFFF" : "#4CA7F8"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               )
             },
-            { 
-              name: 'Plante și extracte naturale', 
+            {
+              name: 'Plante și extracte naturale',
               icon: (isSelected: boolean) => (
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M9 9V7.75C9 3.88401 5.86599 0.75 2 0.75H0.75V2C0.75 5.86599 3.88401 9 7.75 9H9ZM9 9V17.25M16 3.75H17.25V5.25C17.25 9.11599 14.116 12.25 10.25 12.25H9V10.75C9 6.88401 12.134 3.75 16 3.75Z" stroke={isSelected ? "#FFFFFF" : "#84B353"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M9 9V7.75C9 3.88401 5.86599 0.75 2 0.75H0.75V2C0.75 5.86599 3.88401 9 7.75 9H9ZM9 9V17.25M16 3.75H17.25V5.25C17.25 9.11599 14.116 12.25 10.25 12.25H9V10.75C9 6.88401 12.134 3.75 16 3.75Z" stroke={isSelected ? "#FFFFFF" : "#84B353"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               )
             },
-            { 
-              name: 'Minerale', 
+            {
+              name: 'Minerale',
               icon: (isSelected: boolean) => (
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M10 0.75C11 6 14 9 19.25 10C14 11 11 14 10 19.25C9 14 6 11 0.75 10C6 9 9 6 10 0.75Z" stroke={isSelected ? "#FFFFFF" : "#4C71F8"} strokeWidth="1.5" strokeLinecap="square" strokeLinejoin="round"/>
+                  <path d="M10 0.75C11 6 14 9 19.25 10C14 11 11 14 10 19.25C9 14 6 11 0.75 10C6 9 9 6 10 0.75Z" stroke={isSelected ? "#FFFFFF" : "#4C71F8"} strokeWidth="1.5" strokeLinecap="square" strokeLinejoin="round" />
                 </svg>
               )
             },
-            { 
-              name: 'Vitamine', 
+            {
+              name: 'Vitamine',
               icon: (isSelected: boolean) => (
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M11.2855 0.75L12.2855 1.75M12.2855 1.75L17.2855 6.75M12.2855 1.75L4.28553 9.75M17.2855 6.75L18.2855 7.75M17.2855 6.75L14.2855 9.75M14.2855 9.75L6.78554 17.25C5.40482 18.6307 3.16625 18.6307 1.78553 17.25C0.404821 15.8693 0.404823 13.6307 1.78554 12.25L4.28553 9.75M14.2855 9.75H4.28553" stroke={isSelected ? "#FFFFFF" : "#674A85"} strokeWidth="1.5" strokeLinecap="round"/>
+                  <path d="M11.2855 0.75L12.2855 1.75M12.2855 1.75L17.2855 6.75M12.2855 1.75L4.28553 9.75M17.2855 6.75L18.2855 7.75M17.2855 6.75L14.2855 9.75M14.2855 9.75L6.78554 17.25C5.40482 18.6307 3.16625 18.6307 1.78553 17.25C0.404821 15.8693 0.404823 13.6307 1.78554 12.25L4.28553 9.75M14.2855 9.75H4.28553" stroke={isSelected ? "#FFFFFF" : "#674A85"} strokeWidth="1.5" strokeLinecap="round" />
                 </svg>
               )
             },
@@ -257,9 +265,8 @@ export const Step1SelectProducts: React.FC<Props> = ({
             return (
               <div
                 key={product.id}
-                className={`relative cursor-pointer transition-all overflow-hidden ${
-                  selected ? 'ring-2 ring-primary' : ''
-                }`}
+                className={`relative cursor-pointer transition-all overflow-hidden ${selected ? 'ring-2 ring-primary' : ''
+                  }`}
                 style={{
                   background: '#FFFFFF',
                   boxShadow: '0px 3.84013px 15.3605px rgba(0, 0, 0, 0.1)',
@@ -376,7 +383,7 @@ export const Step1SelectProducts: React.FC<Props> = ({
                       ) : (
                         <>
                           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 5V19M5 12H19" stroke="#FA9C19" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M12 5V19M5 12H19" stroke="#FA9C19" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                           {isHovered && (
                             <span
@@ -421,11 +428,10 @@ export const Step1SelectProducts: React.FC<Props> = ({
               ) : (
                 <button
                   onClick={() => goToPage(page as number)}
-                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                    currentPage === page
+                  className={`px-4 py-2 rounded-lg font-medium transition-colors ${currentPage === page
                       ? 'bg-primary text-white'
                       : 'bg-white text-navy-light border border-border hover:bg-gray-50'
-                  }`}
+                    }`}
                 >
                   {page}
                 </button>

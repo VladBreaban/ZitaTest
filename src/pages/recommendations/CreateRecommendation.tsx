@@ -7,6 +7,8 @@ import { Step2AddDetails } from './Step2AddDetails';
 import { Step3ClientInfo } from './Step3ClientInfo';
 import { ShopifyProduct } from '../../types';
 import { recommendationService } from '../../services/recommendationService';
+import { ToastContainer } from '../../components/ui/ToastContainer';
+import { useToasts } from '../../hooks/useToasts';
 
 export interface SelectedProduct {
   product: ShopifyProduct;
@@ -29,6 +31,8 @@ export interface ClientInfo {
 export const CreateRecommendation: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+  const { toasts, addToast, removeToast } = useToasts();
+
   const isEditMode = !!id;
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedProducts, setSelectedProducts] = useState<SelectedProduct[]>([]);
@@ -181,11 +185,10 @@ export const CreateRecommendation: React.FC = () => {
   return (
     <Layout>
       <div>
-        {/* Sticky Header with Title, Description and Button */}
-        <div 
+        <div
           className="sticky top-0 z-40 pb-4 -mt-2 pt-2"
           style={{
-            background: '#F5F7FA',
+            background: '#F5F7FA', paddingInline: 10, width: 'calc(100vw - 330px)', marginLeft: -10
           }}
         >
           <div className="flex items-center justify-between mb-6">
@@ -239,11 +242,11 @@ export const CreateRecommendation: React.FC = () => {
           <div className="flex items-center justify-between">
             <Stepper steps={steps} currentStep={currentStep} />
             {currentStep === 1 && (
-              <div className="relative">
-                <svg 
-                  className="w-4 h-4 absolute left-4 top-1/2 transform -translate-y-1/2 text-navy-lighter" 
-                  fill="none" 
-                  stroke="currentColor" 
+              <div className="relative z-[51]">
+                <svg
+                  className="w-4 h-4 absolute left-4 top-1/2 transform -translate-y-1/2 text-navy-lighter"
+                  fill="none"
+                  stroke="currentColor"
                   viewBox="0 0 24 24"
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -277,6 +280,7 @@ export const CreateRecommendation: React.FC = () => {
               onCancel={handleCancel}
               search={search}
               onSearchChange={setSearch}
+              onProductAdded={addToast}
             />
           )}
 
@@ -352,6 +356,7 @@ export const CreateRecommendation: React.FC = () => {
             </a>
           </div>
         </Modal>
+        <ToastContainer toasts={toasts} onRemove={removeToast} />
       </div>
     </Layout>
   );
