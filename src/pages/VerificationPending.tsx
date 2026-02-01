@@ -51,12 +51,12 @@ export const VerificationPending: React.FC = () => {
         <div className="relative flex flex-col " style={{justifyContent: 'center', height: '100%', maxHeight: 500 }}>
           <div className="max-w-md text-center">
             <div className="mb-8">
-              <span className='step-text' style={{textAlign: 'start'}}>Pasul 3</span>
+              <span className='step-text' style={{textAlign: 'start'}}>Step 3</span>
               <h1 className=" font-bold mb-3 welcome-text" style={{textAlign: 'start'}}>
-                Verificare în curs
+                Verification in progress
               </h1>
               <p className="text-base" style={{ color: '#4A6A85', textAlign: 'start' }}>
-                Mulțumim! Documentele tale au fost trimise pentru verificare. Vei primi un email imediat ce contul tău este aprobat.
+                Thank you! Your documents have been submitted for verification. You will receive an email as soon as your account is approved.
               </p>
             </div>
 

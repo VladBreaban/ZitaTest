@@ -4,6 +4,21 @@ import { Card, Button, Badge, Table } from '../components/ui';
 
 export const Payouts: React.FC = () => {
   const [filter, setFilter] = useState<string>('');
+  const [search, setSearch] = useState<string>('');
+
+  // Mock transaction data - replace with API call when backend is ready
+  const allTransactions = [
+    { id: '21032103210', date: '2025-10-08', amount: '300.99 lei', account: 'visa_EFT****0218', status: 'pending' },
+    { id: '21032103211', date: '2025-10-08', amount: '300.99 lei', account: 'visa_EFT****0218', status: 'completed' },
+    { id: '21032103212', date: '2025-10-08', amount: '300.99 lei', account: 'visa_EFT****0218', status: 'completed' },
+  ];
+
+  // Filter transactions based on search and status
+  const filteredTransactions = allTransactions.filter((transaction) => {
+    const matchesSearch = search === '' || transaction.id.toLowerCase().includes(search.toLowerCase());
+    const matchesStatus = filter === '' || transaction.status === filter;
+    return matchesSearch && matchesStatus;
+  });
 
   return (
     <Layout>
@@ -91,7 +106,7 @@ export const Payouts: React.FC = () => {
         {/* Transaction History */}
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-semibold text-navy">Transaction History (3)</h2>
+            <h2 className="text-base font-semibold text-navy">Transaction History ({filteredTransactions.length})</h2>
             <div className="flex items-center gap-3">
               {/* Search */}
               <div className="relative">
@@ -101,6 +116,8 @@ export const Payouts: React.FC = () => {
                 <input
                   type="text"
                   placeholder="Search by transaction ID"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                   className="pl-9 pr-4 py-2 bg-white border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 w-64 shadow-sm"
                 />
               </div>
@@ -134,28 +151,32 @@ export const Payouts: React.FC = () => {
                 </Table.Row>
               </Table.Header>
               <Table.Body>
-                {[
-                  { id: '21032103210', date: '2025-10-08', amount: '300.99 lei', account: 'visa_EFT****0218', status: 'pending' },
-                  { id: '21032103210', date: '2025-10-08', amount: '300.99 lei', account: 'visa_EFT****0218', status: 'completed' },
-                  { id: '21032103210', date: '2025-10-08', amount: '300.99 lei', account: 'visa_EFT****0218', status: 'completed' },
-                ].map((transaction, idx) => (
-                  <Table.Row key={idx}>
-                    <Table.Cell className="font-medium text-navy">{transaction.id}</Table.Cell>
-                    <Table.Cell className="text-navy-light">{transaction.date}</Table.Cell>
-                    <Table.Cell className="font-medium text-navy">{transaction.amount}</Table.Cell>
-                    <Table.Cell className="text-navy-light">{transaction.account}</Table.Cell>
-                    <Table.Cell>
-                      <Badge variant={transaction.status as 'pending' | 'completed'}>
-                        {transaction.status.charAt(0).toUpperCase() + transaction.status.slice(1)}
-                      </Badge>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <button className="text-primary hover:text-primary-hover text-xs font-medium">
-                        Details
-                      </button>
+                {filteredTransactions.length === 0 ? (
+                  <Table.Row>
+                    <Table.Cell colSpan={6} className="text-center text-navy-light py-8">
+                      No transactions found
                     </Table.Cell>
                   </Table.Row>
-                ))}
+                ) : (
+                  filteredTransactions.map((transaction, idx) => (
+                    <Table.Row key={idx}>
+                      <Table.Cell className="font-medium text-navy">{transaction.id}</Table.Cell>
+                      <Table.Cell className="text-navy-light">{transaction.date}</Table.Cell>
+                      <Table.Cell className="font-medium text-navy">{transaction.amount}</Table.Cell>
+                      <Table.Cell className="text-navy-light">{transaction.account}</Table.Cell>
+                      <Table.Cell>
+                        <Badge variant={transaction.status as 'pending' | 'completed'}>
+                          {transaction.status.charAt(0).toUpperCase() + transaction.status.slice(1)}
+                        </Badge>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <button className="text-primary hover:text-primary-hover text-xs font-medium">
+                          Details
+                        </button>
+                      </Table.Cell>
+                    </Table.Row>
+                  ))
+                )}
               </Table.Body>
             </Table>
           </Card>

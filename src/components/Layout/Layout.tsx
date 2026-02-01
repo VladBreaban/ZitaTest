@@ -44,7 +44,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         </button>
         
         <Header />
-        <main className="pt-6 px-6 pb-10">
+        <main className="pt-6 pl-6 pr-0 pb-10">
           {children}
         </main>
       </div>

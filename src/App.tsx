@@ -3,6 +3,8 @@ import { AuthProvider } from './contexts/AuthContext';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { VerificationPending } from './pages/VerificationPending';
+import { ForgotPassword } from './pages/ForgotPassword';
+import { ResetPassword } from './pages/ResetPassword';
 import { AdminDoctors } from './pages/AdminDoctors';
 import { Dashboard } from './pages/Dashboard';
 import { Recommendations } from './pages/Recommendations';
@@ -20,6 +22,8 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/verification-pending" element={<VerificationPending />} />
           <Route path="/admin" element={<AdminDoctors />} />
           <Route path="/dashboard" element={<Dashboard />} />

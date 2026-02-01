@@ -88,7 +88,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
     `}>
       <div className="px-6 py-6">
-        <img src="/zitamine_logo.png" alt="Zitamine PRO" className="h-auto w-[70%]" />
+        <img src="/zitamine_logo.png" alt="Zitamine PRO" className="h-[54px] w-auto" />
       </div>
 
       <div className="lg:hidden px-4 pb-4">

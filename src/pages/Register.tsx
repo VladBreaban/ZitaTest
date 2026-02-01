@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/authService';
 import './LoginForm.css';
 
-type UserType = 'doctor' | 'client' | null;
+type UserType = 'doctor' | null;
 
 interface FormData {
   userType: UserType;
@@ -12,9 +12,9 @@ interface FormData {
   email: string;
   password: string;
   healthProfession: string;
-  expertiseLevel: string;
   organizationType: string;
   certificateUrl: string;
+  termsAccepted: boolean;
 }
 
 export const Register: React.FC = () => {
@@ -30,23 +30,23 @@ export const Register: React.FC = () => {
     email: '',
     password: '',
     healthProfession: '',
-    expertiseLevel: '',
     organizationType: '',
-    certificateUrl: ''
+    certificateUrl: '',
+    termsAccepted: false
   });
 
   const handleNext = () => {
     if (currentStep === 1 && !formData.userType) {
-      setError('Vă rugăm să selectați un tip de cont');
+      setError('Please select an account type');
       return;
     }
     if (currentStep === 2) {
       if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
-        setError('Toate câmpurile sunt obligatorii');
+        setError('All fields are required');
         return;
       }
       if (formData.password.length < 8) {
-        setError('Parola trebuie să aibă minim 8 caractere');
+        setError('Password must be at least 8 characters');
         return;
       }
     }
@@ -60,12 +60,16 @@ export const Register: React.FC = () => {
   };
 
   const handleSubmit = async () => {
-    if (!formData.healthProfession || !formData.expertiseLevel || !formData.organizationType) {
-      setError('Toate câmpurile sunt obligatorii');
+    if (!formData.healthProfession || !formData.organizationType) {
+      setError('All fields are required');
       return;
     }
     if (!formData.certificateUrl) {
-      setError('Vă rugăm să încărcați certificatul');
+      setError('Please upload your certificate');
+      return;
+    }
+    if (!formData.termsAccepted) {
+      setError('Please accept the Terms & Conditions to continue');
       return;
     }
 
@@ -78,7 +82,7 @@ export const Register: React.FC = () => {
         password: formData.password,
         fullName: `${formData.firstName} ${formData.lastName}`,
         healthProfession: formData.healthProfession,
-        expertiseLevel: formData.expertiseLevel,
+        expertiseLevel: 'professional',
         organizationType: formData.organizationType,
         certificateUrl: formData.certificateUrl
       });
@@ -86,7 +90,7 @@ export const Register: React.FC = () => {
       // Redirect to verification pending page
       navigate('/verification-pending');
     } catch (err: any) {
-      setError(err.message || 'A apărut o eroare la înregistrare');
+      setError(err.message || 'An error occurred during registration');
     } finally {
       setIsLoading(false);
     }
@@ -104,7 +108,7 @@ export const Register: React.FC = () => {
       </div>
 
       {/* RIGHT SIDE */}
-      <div className="w-full lg:w-[42%] relative overflow-hidden bg-white flex flex-col" style={{ padding: "7vh 7.5vw 1vh 7.5vw" }}>
+      <div className="w-full lg:w-[42%] relative overflow-hidden bg-white flex flex-col" style={{ padding: "7vh 7.5vw 3vh 7.5vw", height: '100vh' }}>
         {/* Gradient BG */}
         <div
           className="absolute inset-0 pointer-events-none"
@@ -135,18 +139,18 @@ export const Register: React.FC = () => {
         </div>
 
         {/* CONTENT */}
-        <div className="relative flex flex-col  pt-8 pb-8" style={{ justifyContent: 'space-between', height: '100%' }}>
-          <div className="w-fulld" style={{ marginTop: '78px', width: '100%' }}>
+        <div className="relative flex flex-col flex-1 pt-8" style={{ justifyContent: 'space-between', overflow: 'hidden' }}>
+          <div className="w-full" style={{ marginTop: currentStep === 3 ? '30px' : '78px' }}>
             {/* Step 1: User Type Selection */}
             {currentStep === 1 && (
               <div className="space-y-6">
                 <div className="mb-10">
-                  <span className='step-text' style={{ textAlign: 'start' }}>Pasul 1</span>
-                  <h1 className="text-[26px] font-bold mb-1 welcome-text">
-                    Creează-ți contul Zitamine
+                  <span className='step-text' style={{ textAlign: 'start' }}>Step 1</span>
+                  <h1 className="text-[26px] mb-1" style={{ fontFamily: 'Inter', fontWeight: 600, color: '#043B6C' }}>
+                    Create your account
                   </h1>
                   <p className="text-sm" style={{ color: '#8E9BB0' }}>
-                    Alege tipul de cont pentru a continua.
+                    Choose your account type to continue.
                   </p>
                 </div>
 
@@ -169,38 +173,14 @@ export const Register: React.FC = () => {
                     <div className="flex justify-between w-full items-start space-x-3">
                       <div>
                         <h3 className="user-type-title mb-1">
-                          Sunt medic / antrenor fitness
+                          I am a doctor / fitness trainer
                         </h3>
                         <p className="user-type-description">
-                          Construiește planuri personalizate de suplimente
+                          Build personalized supplement plans
                         </p>
                       </div>
                       <div className="icon-circle">
                         <img src="/icons/user-plus.svg" alt="" className="w-6 h-6" />
-                      </div>
-                    </div>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setFormData({ ...formData, userType: 'client' });
-                      setError('');
-                      setCurrentStep(2);
-                    }}
-                    className={`user-type-card w-full text-left ${formData.userType === 'client' ? 'selected' : ''}`}
-                  >
-                    <div className="flex justify-between w-full items-start space-x-3">
-                      <div>
-                        <h3 className="user-type-title mb-1">
-                          Sunt client
-                        </h3>
-                        <p className="user-type-description">
-                          Primește recomandări personalizate de suplimente
-                        </p>
-                      </div>
-                      <div className="icon-circle">
-                        <img src="/icons/user.svg" alt="" className="w-6 h-6" />
                       </div>
                     </div>
                   </button>
@@ -214,12 +194,12 @@ export const Register: React.FC = () => {
               <div className="space-y-6">
                 <div>
                   <div className="mb-10">
-                    <span className='step-text' style={{ textAlign: 'start' }}>Pasul 2</span>
+                    <span className='step-text' style={{ textAlign: 'start' }}>Step 2</span>
                     <h1 className="text-[26px] font-bold mb-1 welcome-text">
-                      Profilul tău
+                      Your profile
                     </h1>
                     <p className="text-sm" style={{ color: '#8E9BB0' }}>
-                      Pentru a începe cu Zitamine, te rugăm să furnizezi detaliile tale personale și să configurezi contul tău securizat.
+                      Enter your personal details to set up your account.
                     </p>
                   </div>
 
@@ -233,25 +213,25 @@ export const Register: React.FC = () => {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="form-label block font-medium mb-2">
-                          Prenume*
+                          First name*
                         </label>
                         <input
                           type="text"
                           value={formData.firstName}
                           onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                          placeholder="ex., Ana"
+                          placeholder="e.g. Ana"
                           className="w-full px-4 py-3 rounded-[12px] border border-[#E6ECF4] focus:outline-none focus:ring-2 focus:ring-[#FFD18C] focus:border-transparent text-[#1e3a5f]"
                         />
                       </div>
                       <div>
                         <label className="form-label block font-medium mb-2">
-                          Nume*
+                          Last name*
                         </label>
                         <input
                           type="text"
                           value={formData.lastName}
                           onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                          placeholder="ex., Popescu"
+                          placeholder="e.g. Popescu"
                           className="w-full px-4 py-3 rounded-[12px] border border-[#E6ECF4] focus:outline-none focus:ring-2 focus:ring-[#FFD18C] focus:border-transparent text-[#1e3a5f]"
                         />
                       </div>
@@ -265,22 +245,23 @@ export const Register: React.FC = () => {
                         type="email"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        placeholder="ex., ana@zitamine.ro"
+                        placeholder="e.g. ana@zitamine.com"
                         className="w-full px-4 py-3 rounded-[12px] border border-[#E6ECF4] focus:outline-none focus:ring-2 focus:ring-[#FFD18C] focus:border-transparent text-[#1e3a5f]"
                       />
                     </div>
 
                     <div>
                       <label className="form-label block font-medium mb-2">
-                        Parolă*
+                        Password*
                       </label>
                       <input
                         type="password"
                         value={formData.password}
                         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                        placeholder="Creează parola ta"
+                        placeholder="Create your password"
                         className="w-full px-4 py-3 rounded-[12px] border border-[#E6ECF4] focus:outline-none focus:ring-2 focus:ring-[#FFD18C] focus:border-transparent text-[#1e3a5f]"
                       />
+                      <p className="text-xs text-[#8E9BB0] mt-1">Minimum 8 characters</p>
                     </div>
                   </div>
                 </div>
@@ -292,7 +273,7 @@ export const Register: React.FC = () => {
                     onClick={handleBack}
                     className="back-btn"
                   >
-                    {"<"} Înapoi
+                    {"<"} Back
                   </button>
                   <button
                     type="button"
@@ -307,7 +288,7 @@ export const Register: React.FC = () => {
                       alignItems: 'center'
                     }}
                   >
-                    Următorul pas
+                    Next step
                     <img src="/icons/right-arrow-white.svg" alt="" className="w-4 h-4" />
                   </button>
                 </div>
@@ -315,14 +296,14 @@ export const Register: React.FC = () => {
             )}
 
             {/* Step 3: Expertise Information */}
-            {currentStep === 3 && formData.userType === 'doctor' && (
-              <div className="space-y-6">
-                <div className="mb-10">
+            {currentStep === 3 && (
+              <div className="space-y-4">
+                <div className="mb-6">
                   <h1 className="text-[26px] font-bold mb-1 welcome-text">
-                    Expertiza ta
+                    Professional expertise
                   </h1>
                   <p className="text-sm" style={{ color: '#8E9BB0' }}>
-                    Pentru a începe cu Zitamine, te rugăm să furnizezi detaliile profesionale și să încarci certificatul.
+                    To join the Zitamine PRO community, please provide your professional details and upload a certificate that proves you are a professional in health or well-being.
                   </p>
                 </div>
 
@@ -332,62 +313,62 @@ export const Register: React.FC = () => {
                   </div>
                 )}
 
-                <div className="space-y-4">
+                <div className="space-y-3">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="form-label block font-medium mb-2">
-                        Profesie medicală*
+                        Specialization*
                       </label>
                       <select
                         value={formData.healthProfession}
                         onChange={(e) => setFormData({ ...formData, healthProfession: e.target.value })}
                         className="w-full px-4 py-3 rounded-[12px] border border-[#E6ECF4] focus:outline-none focus:ring-2 focus:ring-[#FFD18C] focus:border-transparent text-[#1e3a5f]"
                       >
-                        <option value="">-- Te rugăm să alegi --</option>
-                        <option value="doctor">Medic</option>
-                        <option value="nutritionist">Nutriționist</option>
-                        <option value="fitness-trainer">Antrenor Fitness</option>
-                        <option value="pharmacist">Farmacist</option>
+                        <option value="">-- Please select --</option>
+                        <option value="doctor">Doctor</option>
+                        <option value="nutritionist">Nutritionist</option>
+                        <option value="dietitian">Dietitian</option>
+                        <option value="fitness-trainer">Fitness Trainer</option>
+                        <option value="personal-trainer">Personal Trainer</option>
+                        <option value="pharmacist">Pharmacist</option>
+                        <option value="physiotherapist">Physiotherapist</option>
+                        <option value="health-coach">Health Coach</option>
+                        <option value="wellness-coach">Wellness Coach</option>
+                        <option value="naturopath">Naturopath</option>
+                        <option value="chiropractor">Chiropractor</option>
+                        <option value="osteopath">Osteopath</option>
+                        <option value="massage-therapist">Massage Therapist</option>
+                        <option value="yoga-instructor">Yoga Instructor</option>
+                        <option value="pilates-instructor">Pilates Instructor</option>
+                        <option value="sports-coach">Sports Coach</option>
+                        <option value="other">Other</option>
                       </select>
                     </div>
                     <div>
                       <label className="form-label block font-medium mb-2">
-                        Nivel de expertiză*
+                        Organization type*
                       </label>
                       <select
-                        value={formData.expertiseLevel}
-                        onChange={(e) => setFormData({ ...formData, expertiseLevel: e.target.value })}
+                        value={formData.organizationType}
+                        onChange={(e) => setFormData({ ...formData, organizationType: e.target.value })}
                         className="w-full px-4 py-3 rounded-[12px] border border-[#E6ECF4] focus:outline-none focus:ring-2 focus:ring-[#FFD18C] focus:border-transparent text-[#1e3a5f]"
                       >
-                        <option value="">-- Te rugăm să alegi --</option>
-                        <option value="beginner">Începător</option>
-                        <option value="intermediate">Intermediar</option>
-                        <option value="expert">Expert</option>
+                        <option value="">-- Please select --</option>
+                        <option value="freelancer">Freelancer</option>
+                        <option value="hospital">Hospital</option>
+                        <option value="clinic">Clinic</option>
+                        <option value="private-practice">Private Practice</option>
+                        <option value="gym">Gym</option>
+                        <option value="wellness-center">Wellness Center</option>
+                        <option value="spa">Spa</option>
+                        <option value="other">Other</option>
                       </select>
                     </div>
                   </div>
 
                   <div>
                     <label className="form-label block font-medium mb-2">
-                      Tip organizație*
-                    </label>
-                    <select
-                      value={formData.organizationType}
-                      onChange={(e) => setFormData({ ...formData, organizationType: e.target.value })}
-                      className="w-full px-4 py-3 rounded-[12px] border border-[#E6ECF4] focus:outline-none focus:ring-2 focus:ring-[#FFD18C] focus:border-transparent text-[#1e3a5f]"
-                    >
-                      <option value="">-- Te rugăm să alegi --</option>
-                      <option value="hospital">Spital</option>
-                      <option value="clinic">Clinică</option>
-                      <option value="private-practice">Cabinet privat</option>
-                      <option value="gym">Sală de fitness</option>
-                      <option value="other">Altele</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="form-label block font-medium mb-2">
-                      Încarcă certificatul*
+                      Upload certificate*
                     </label>
                     <FileUploadComponent
                       onUploadComplete={(url) => setFormData({ ...formData, certificateUrl: url })}
@@ -395,25 +376,27 @@ export const Register: React.FC = () => {
                     />
                   </div>
 
-                  <div className="flex items-end space-x-2">
+                  <div className="flex items-center space-x-2">
                     <input
                       type="checkbox"
                       id="terms"
-                      className="custom-checkbox mt-1"
+                      checked={formData.termsAccepted}
+                      onChange={(e) => setFormData({ ...formData, termsAccepted: e.target.checked })}
+                      className="custom-checkbox"
                     />
                     <label htmlFor="terms" className="text-sm text-[#8E9BB0]">
-                      Termeni & Condiții
+                      I agree to the Terms & Conditions*
                     </label>
                   </div>
                 </div>
 
-                <div className="flex justify-between space-x-4" style={{ marginTop: 60 }}>
+                <div className="flex justify-between space-x-4" style={{ marginTop: 30 }}>
                   <button
                     type="button"
                     onClick={handleBack}
                     className="back-btn"
                   >
-                    {"<"} Înapoi
+                    {"<"} Back
                   </button>
                   <button
                     type="button"
@@ -429,7 +412,7 @@ export const Register: React.FC = () => {
                       alignItems: 'center'
                     }}
                   >
-                    {isLoading ? 'Se finalizează...' : 'Finalizare'}
+                    {isLoading ? 'Finishing...' : 'Finish'}
                     {!isLoading &&
                       <img src="/icons/right-arrow-white.svg" alt="" className="w-4 h-4" />
                     }
@@ -440,16 +423,15 @@ export const Register: React.FC = () => {
           </div>
 
           {/* Footer */}
-          {
-            currentStep === 1 &&
-            <div className="mt-auto pt-10 flex gap-16 text-[11px] text-[#8E9BB0]">
+          {currentStep === 1 && (
+            <div className="flex gap-16 text-[11px] text-[#8E9BB0] pb-4">
               <button
                 onClick={() => navigate('/login')}
                 className="hover:text-[#4A5A75] link-btn">
-                Ai deja un cont?
+                Already have an account?
               </button>
             </div>
-          }
+          )}
 
         </div>
       </div>
@@ -513,7 +495,7 @@ const FileUploadComponent: React.FC<{ onUploadComplete: (url: string) => void; u
 
       if (!response.ok) {
         clearInterval(progressInterval);
-        throw new Error('Încărcarea a eșuat');
+        throw new Error('Upload failed');
       }
 
       const result = await response.json();
@@ -524,8 +506,8 @@ const FileUploadComponent: React.FC<{ onUploadComplete: (url: string) => void; u
       onUploadComplete(result.data.s3Path);
     } catch (error) {
       clearInterval(progressInterval);
-      console.error('Eroare la încărcare:', error);
-      alert('Eroare la încărcarea fișierului');
+      console.error('Upload error:', error);
+      alert('Error uploading file');
       setUploadedFile(null);
     } finally {
       setUploading(false);
@@ -551,7 +533,7 @@ const FileUploadComponent: React.FC<{ onUploadComplete: (url: string) => void; u
         onDragLeave={handleDrag}
         onDragOver={handleDrag}
         onDrop={handleDrop}
-        className={`border-2 border-dashed rounded-[12px] p-8 text-center transition-colors ${dragActive ? 'border-[#FF9B19] bg-[#FF9B19]/5' : 'border-[#E6ECF4] bg-white'
+        className={`border-2 border-dashed rounded-[12px] p-4 text-center transition-colors ${dragActive ? 'border-[#FF9B19] bg-[#FF9B19]/5' : 'border-[#E6ECF4] bg-white'
           }`}
       >
         <input
@@ -561,19 +543,16 @@ const FileUploadComponent: React.FC<{ onUploadComplete: (url: string) => void; u
           onChange={handleChange}
           accept=".pdf,.png,.jpg,.jpeg,.doc,.docx"
         />
-        <label htmlFor="file-upload" className="cursor-pointer items-start justify-between flex" style={{ gap: 25 }}>
+        <label htmlFor="file-upload" className="cursor-pointer items-start justify-between flex" style={{ gap: 20 }}>
           <div className="icon-circle">
             <img src="/icons/cloud-upload-blue.svg" alt="" className="w-6 h-6" />
           </div>
           <div className='flex flex-col items-start'>
-            <p className="text-sm text-[#1e3a5f] mb-2">
-              <span className="text-[#043B6C] font-semibold">Click pentru a încărca</span> sau trage și plasează
+            <p className="text-sm text-[#1e3a5f] mb-1">
+              <span className="text-[#043B6C] font-semibold">Click to upload</span> or drag and drop
             </p>
             <p className="text-xs text-[#4A6A85]" style={{ textAlign: 'start' }}>
-              Te rugăm să încarci un certificat și/sau diplomă care să ateste finalizarea practicilor tale preferate. Acesta va fi trimis nouă pentru a-ți confirma contul. Durează aproximativ 1 zi lucrătoare.
-            </p>
-            <p className="text-xs text-[#4A6A85] mt-2" style={{ textAlign: 'start' }}>
-              Mărime maximă fișier: 10 MB
+              Upload a certificate that proves you are a professional in health or well-being. Review takes ~1 business day. Max 10 MB.
             </p>
           </div>
         </label>

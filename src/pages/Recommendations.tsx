@@ -9,17 +9,18 @@ export const Recommendations: React.FC = () => {
   const navigate = useNavigate();
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<string>('');
+  const [statusFilter, setStatusFilter] = useState<string>('');
   const [search, setSearch] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
     loadRecommendations();
-  }, [filter, search]);
+  }, [statusFilter, search]);
 
   const loadRecommendations = async () => {
     setLoading(true);
     try {
-      const data = await recommendationService.getRecommendations(filter, search);
+      const data = await recommendationService.getRecommendations(statusFilter, search);
       setRecommendations(data.data);
     } catch (error) {
       console.error('Failed to load recommendations:', error);
@@ -38,9 +39,12 @@ export const Recommendations: React.FC = () => {
     return variants[status as keyof typeof variants] || 'new';
   };
 
-  const sortOptions = [
-    { value: '', label: 'Recente' },
-
+  const statusOptions = [
+    { value: '', label: 'All' },
+    { value: 'draft', label: 'Draft' },
+    { value: 'new', label: 'New' },
+    { value: 'viewed', label: 'Viewed' },
+    { value: 'purchased', label: 'Purchased' },
   ];
 
   return (
@@ -52,11 +56,11 @@ export const Recommendations: React.FC = () => {
             <h1 className="text-[32px] font-serif text-navy mb-1" style={{ fontWeight: 500 }}>
               My Recommendations</h1>
             <p className="text-lg font-normal leading-[150%] tracking-[-0.01em] text-[#4A6A85]">
-              View and manage all your client recommendations
+              All client protocols in one place
             </p>
           </div>
           <Link to="/recommendations/create">
-            <Button icon={<span className="text-lg leading-none">+</span>}>
+            <Button>
               <span style={{
                 fontFamily: 'Inter',
                 fontStyle: 'normal',
@@ -68,7 +72,7 @@ export const Recommendations: React.FC = () => {
                 letterSpacing: '-0.18px',
                 color: '#FFFFFF'
               }}>
-                Add Recommendations
+                + Create recommendation
               </span>
             </Button>
           </Link>
@@ -78,19 +82,19 @@ export const Recommendations: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <StatCard
             value={loading ? '-' : recommendations.length}
-            label="Total recommendations"
+            label="Protocols created"
             icon={<img src="/images/people-like, inner circle.svg" alt="" className="w-6 h-6" />}
           />
           <StatCard
             value={loading ? '-' : recommendations.filter((r) => r.status === 'purchased').length}
-            label="Purchased"
+            label="Completed orders"
             icon={<img src="/images/money-hand, coins.svg" alt="" className="w-6 h-6" />}
             valueColor="#FA9C19"
             isWhite={true}
           />
           <StatCard
             value={loading ? '-' : recommendations.filter((r) => r.status === 'viewed').length}
-            label="Viewed"
+            label="Opened by clients"
             labelColor="#4A6A85"
           />
           <StatCard
@@ -117,12 +121,12 @@ export const Recommendations: React.FC = () => {
                   color: '#4A6A85'
                 }}
               >
-                Sort by:
+                Status:
               </span>
               <CustomSelect
-                value={filter}
-                onChange={setFilter}
-                options={sortOptions}
+                value={statusFilter}
+                onChange={setStatusFilter}
+                options={statusOptions}
                 style={{
                   padding: '10px 16px',
                   width: '166px',
@@ -133,13 +137,14 @@ export const Recommendations: React.FC = () => {
                 }}
               />
               <button
-                className="flex flex-row justify-center items-center"
+                onClick={() => setShowFilters(!showFilters)}
+                className={`flex flex-row justify-center items-center ${showFilters ? 'ring-2 ring-primary/20' : ''}`}
                 style={{
                   padding: '14px 32px',
                   gap: '12px',
                   width: '138px',
                   height: '50px',
-                  background: 'rgba(255, 255, 255, 0.1)',
+                  background: showFilters ? 'rgba(255, 255, 255, 0.5)' : 'rgba(255, 255, 255, 0.1)',
                   border: '1px solid #EBEBEB',
                   borderRadius: '12px'
                 }}
@@ -154,7 +159,7 @@ export const Recommendations: React.FC = () => {
                     color: '#043B6C'
                   }}
                 >
-                  Filtre
+                  Filters
                 </span>
                 <img src="/icons/settings-orange.svg" alt="" className="w-[14px] h-[14px]" />
               </button>
@@ -186,6 +191,46 @@ export const Recommendations: React.FC = () => {
               }}
             />
           </div>
+
+          {/* Filter Panel */}
+          {showFilters && (
+            <div
+              className="mt-4 p-4 flex flex-wrap gap-4 items-center"
+              style={{
+                background: 'rgba(255, 255, 255, 0.6)',
+                border: '1px solid #EBEBEB',
+                borderRadius: '12px'
+              }}
+            >
+              <span className="text-sm font-medium text-[#4A6A85]">Quick filters:</span>
+              <div className="flex flex-wrap gap-2">
+                {statusOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    onClick={() => setStatusFilter(option.value)}
+                    className={`px-4 py-2 text-sm rounded-full transition-all ${
+                      statusFilter === option.value
+                        ? 'bg-[#4CA7F8] text-white'
+                        : 'bg-white text-[#043B6C] border border-[#EBEBEB] hover:border-[#4CA7F8]'
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+              {(statusFilter || search) && (
+                <button
+                  onClick={() => {
+                    setStatusFilter('');
+                    setSearch('');
+                  }}
+                  className="ml-auto text-sm text-red-500 hover:text-red-600 font-medium"
+                >
+                  Clear all filters
+                </button>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Recommendations Table */}

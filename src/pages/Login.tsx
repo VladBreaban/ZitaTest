@@ -86,10 +86,10 @@ export const Login: React.FC = () => {
                 className="text-[26px] font-bold mb-1 welcome-text"
 
               >
-                Bine ai revenit!
+                Welcome back!
               </h1>
               <p className="text-sm" style={{ color: '#8E9BB0' }}>
-                Lorem ipsum situm dolores
+                Sign in to your account to continue
               </p>
             </div>
 
@@ -122,7 +122,7 @@ export const Login: React.FC = () => {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Parolă"
+                  placeholder="Password"
                   className="w-full px-5 text-sm bg-white border border-[#E6ECF4] rounded-full focus:outline-none focus:ring-2 focus:ring-[#FFD18C] focus:border-transparent text-[#1e3a5f] login-input"
                   style={{ height: '56px', width: '100%' }}
                 />
@@ -134,7 +134,7 @@ export const Login: React.FC = () => {
                     type="submit"
                     disabled={loading}
                     className="orange-fill-btn w-full flex items-center justify-center gap-2 rounded-full text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md">
-                    {loading ? 'Se încarcă...' : 'Intră în cont'}
+                    {loading ? 'Loading...' : 'Sign in'}
                     {!loading && (
                       <svg
                         width="18"
@@ -156,7 +156,7 @@ export const Login: React.FC = () => {
                 {/* Divider */}
                 <div className="flex items-center gap-4 text-[11px] text-[#C4CDD9] pt-4 divider">
                   <div className="flex-1 h-px bg-[#CBCFD6]" style={{ opacity: 0.6 }} />
-                  <span style={{ fontFamily: 'Inter' }}>sau intră în cont cu</span>
+                  <span style={{ fontFamily: 'Inter' }}>or sign in with</span>
                   <div className="flex-1 h-px bg-[#CBCFD6]" style={{ opacity: 0.6 }} />
                 </div>
 
@@ -197,13 +197,13 @@ export const Login: React.FC = () => {
               to="/forgot-password"
               className="hover:text-[#043B6C] link-btn"
             >
-              Ai uitat parola?
+              Forgot password?
             </Link>
             <Link
               to="/register"
-              className="hover:text-[#043B6C link-btn"
+              className="hover:text-[#043B6C] link-btn"
             >
-              Înregistrează-te acum
+              Register now
             </Link>
           </div>
         </div>

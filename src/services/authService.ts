@@ -36,4 +36,18 @@ export const authService = {
   isAuthenticated(): boolean {
     return !!localStorage.getItem('token');
   },
+
+  async forgotPassword(email: string): Promise<void> {
+    const response = await apiService.post<ApiResponse<null>>('/auth/forgot-password', { email });
+    if (!response.data.success) {
+      throw new Error(response.data.message || 'Failed to send reset email');
+    }
+  },
+
+  async resetPassword(token: string, password: string): Promise<void> {
+    const response = await apiService.post<ApiResponse<null>>('/auth/reset-password', { token, password });
+    if (!response.data.success) {
+      throw new Error(response.data.message || 'Failed to reset password');
+    }
+  },
 };

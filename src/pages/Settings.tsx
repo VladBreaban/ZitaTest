@@ -1,16 +1,110 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Layout } from '../components/Layout/Layout';
-import { Card, Button } from '../components/ui';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { apiService } from '../services/api';
 
 export const Settings: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, updateUser } = useAuth();
   const navigate = useNavigate();
   const [showPasswordFields, setShowPasswordFields] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [saveError, setSaveError] = useState('');
+
+  // Form state
+  const [fullName, setFullName] = useState(user?.fullName || '');
+  const [email, setEmail] = useState(user?.email || '');
+  const [iban, setIban] = useState(user?.iban || '');
+
+  // Track if initial load is done and original values
+  const initialLoadDone = useRef(false);
+  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const originalValues = useRef({ fullName: '', email: '', iban: '' });
+
+  // Update form when user changes (initial load only)
+  useEffect(() => {
+    if (user && !initialLoadDone.current) {
+      setFullName(user.fullName || '');
+      setEmail(user.email || '');
+      setIban(user.iban || '');
+      originalValues.current = {
+        fullName: user.fullName || '',
+        email: user.email || '',
+        iban: user.iban || ''
+      };
+      initialLoadDone.current = true;
+    }
+  }, [user]);
+
+  // Check if values have changed
+  const hasChanges = useCallback(() => {
+    return (
+      fullName !== originalValues.current.fullName ||
+      email !== originalValues.current.email ||
+      iban !== originalValues.current.iban
+    );
+  }, [fullName, email, iban]);
+
+  // Autosave function
+  const saveProfile = useCallback(async () => {
+    if (!initialLoadDone.current || !hasChanges()) return;
+
+    setIsSaving(true);
+    setSaveStatus('saving');
+    setSaveError('');
+
+    try {
+      const response = await apiService.put<{ success: boolean; data?: any; message?: string }>('/auth/update-profile', {
+        fullName,
+        email,
+        iban,
+      });
+
+      if (response.data.success && response.data.data) {
+        localStorage.setItem('token', response.data.data.token);
+        localStorage.setItem('user', JSON.stringify(response.data.data));
+        if (updateUser) {
+          updateUser(response.data.data);
+        }
+        // Update original values after successful save
+        originalValues.current = { fullName, email, iban };
+        setSaveStatus('saved');
+        setTimeout(() => setSaveStatus('idle'), 2000);
+      } else {
+        setSaveStatus('error');
+        setSaveError(response.data.message || 'Failed to save');
+      }
+    } catch (error: any) {
+      setSaveStatus('error');
+      setSaveError(error?.response?.data?.message || 'Failed to save');
+    } finally {
+      setIsSaving(false);
+    }
+  }, [fullName, email, iban, updateUser, hasChanges]);
+
+  // Debounced autosave - triggers 1 second after user stops typing
+  useEffect(() => {
+    if (!initialLoadDone.current || !hasChanges()) return;
+
+    // Clear existing timeout
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current);
+    }
+
+    // Set new timeout for autosave
+    saveTimeoutRef.current = setTimeout(() => {
+      saveProfile();
+    }, 1000);
+
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+    };
+  }, [fullName, email, iban, saveProfile, hasChanges]);
 
   const cardStyle = {
     background: 'rgba(255, 255, 255, 0.14)',
@@ -74,7 +168,7 @@ export const Settings: React.FC = () => {
     outline: 'none',
   };
 
-  const changePhotoButtonStyle = {
+  const changePasswordButtonStyle = {
     height: '48px',
     background: '#FA9C19',
     border: '2px solid #EE900D',
@@ -85,6 +179,64 @@ export const Settings: React.FC = () => {
     fontSize: '16px',
     color: '#FFFFFF',
     cursor: 'pointer',
+  };
+
+  // Toast notification component
+  const Toast = () => {
+    if (saveStatus === 'idle') return null;
+
+    const getToastStyles = () => {
+      if (saveStatus === 'saving') {
+        return {
+          bg: 'bg-[#4A6A85]',
+          icon: (
+            <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+            </svg>
+          ),
+          text: 'Saving changes...'
+        };
+      }
+      if (saveStatus === 'saved') {
+        return {
+          bg: 'bg-green-500',
+          icon: (
+            <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          ),
+          text: 'Changes saved successfully'
+        };
+      }
+      if (saveStatus === 'error') {
+        return {
+          bg: 'bg-red-500',
+          icon: (
+            <svg className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          ),
+          text: saveError || 'Failed to save changes'
+        };
+      }
+      return { bg: '', icon: null, text: '' };
+    };
+
+    const { bg, icon, text } = getToastStyles();
+
+    return (
+      <div
+        className={`fixed bottom-6 right-6 ${bg} text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-3 z-50 animate-slide-up`}
+        style={{
+          animation: 'slideUp 0.3s ease-out',
+          boxShadow: '0 10px 40px rgba(0,0,0,0.2)'
+        }}
+      >
+        {icon}
+        <span className="font-medium text-sm">{text}</span>
+      </div>
+    );
   };
 
   const orangeCopyButtonStyle = {
@@ -149,6 +301,23 @@ export const Settings: React.FC = () => {
 
   return (
     <Layout>
+      {/* Toast Notification */}
+      <Toast />
+
+      {/* CSS Animation */}
+      <style>{`
+        @keyframes slideUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
+
       <div className="w-full">
         {/* Header - Full Width */}
         <div className="mb-8 flex items-start justify-between w-full">
@@ -160,23 +329,6 @@ export const Settings: React.FC = () => {
               Manage your profile and payment information
             </p>
           </div>
-          <button
-            className="flex flex-row items-center text-white font-medium"
-            style={{
-              padding: '0px 24px',
-              gap: '8px',
-              width: '152px',
-              height: '50px',
-              background: '#F69917',
-              borderRadius: '64px',
-            }}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <line x1="12" y1="5" x2="12" y2="19" />
-              <line x1="5" y1="12" x2="19" y2="12" />
-            </svg>
-            Withdraw
-          </button>
         </div>
 
         {/* Content - Max Width */}
@@ -187,12 +339,13 @@ export const Settings: React.FC = () => {
               <h2 className="text-[24px] font-serif leading-[130%] tracking-[-0.01em] text-[#043B6C] mb-6">
                 Personal Information
               </h2>
-              <form className="space-y-5 w-full">
+              <div className="space-y-5 w-full">
                 <div>
                   <label className="block mb-2" style={labelStyle}>Full Name</label>
                   <input
                     type="text"
-                    defaultValue={user?.fullName || ''}
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
                     style={inputStyle}
                   />
                 </div>
@@ -200,24 +353,10 @@ export const Settings: React.FC = () => {
                   <label className="block mb-2" style={labelStyle}>Email Address</label>
                   <input
                     type="email"
-                    defaultValue={user?.email || ''}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     style={inputStyle}
                   />
-                </div>
-                <div>
-                  <label className="block mb-2" style={labelStyle}>Profile Photo</label>
-                  <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 rounded-full overflow-hidden">
-                      <img
-                        src={`https://ui-avatars.com/api/?name=${user?.fullName || 'User'}&background=FF9933&color=fff`}
-                        alt="Profile"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <button type="button" style={changePhotoButtonStyle}>
-                      Change Photo
-                    </button>
-                  </div>
                 </div>
 
                 {/* Password Section */}
@@ -229,7 +368,7 @@ export const Settings: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setShowPasswordFields(!showPasswordFields)}
-                      style={changePhotoButtonStyle}
+                      style={changePasswordButtonStyle}
                     >
                       Change Password
                     </button>
@@ -264,13 +403,7 @@ export const Settings: React.FC = () => {
                     </div>
                   )}
                 </div>
-
-                <div className="pt-4 flex justify-end">
-                  <Button type="submit" className="!rounded-[12px] !bg-white !text-[#FA9C19] !border-2 !border-[#FA9C19] hover:!bg-[#FA9C19] hover:!text-white">
-                    Save Changes
-                  </Button>
-                </div>
-              </form>
+              </div>
             </div>
 
             {/* Discount Codes */}
@@ -347,23 +480,19 @@ export const Settings: React.FC = () => {
               <h2 className="text-[24px] font-serif leading-[130%] tracking-[-0.01em] text-[#043B6C] mb-6">
                 Bank Information
               </h2>
-              <form className="space-y-5 w-full">
+              <div className="space-y-5 w-full">
                 <div>
                   <label className="block mb-2" style={labelStyle}>IBAN</label>
                   <input
                     type="text"
-                    defaultValue={user?.iban || ''}
+                    value={iban}
+                    onChange={(e) => setIban(e.target.value)}
                     placeholder="Enter your IBAN"
                     style={inputStyle}
                   />
                   <p className="text-xs text-[#4A6A85] mt-2">Your commission payouts will be sent to this account.</p>
                 </div>
-                <div className="pt-4 flex justify-end">
-                  <Button type="submit" className="!rounded-[12px] !bg-white !text-[#FA9C19] !border-2 !border-[#FA9C19] hover:!bg-[#FA9C19] hover:!text-white">
-                    Save Changes
-                  </Button>
-                </div>
-              </form>
+              </div>
             </div>
 
             {/* Danger Zone - Delete Account */}
