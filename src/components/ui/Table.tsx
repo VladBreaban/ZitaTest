@@ -27,6 +27,7 @@ interface TableHeadProps {
 interface TableCellProps {
   children: React.ReactNode;
   className?: string;
+  colSpan?: number;
 }
 
 export const Table: React.FC<TableProps> & {
@@ -75,12 +76,13 @@ Table.Head = ({ children, className = '' }) => (
   </th>
 );
 
-Table.Cell = ({ children, className = '' }) => (
-  <td 
+Table.Cell = ({ children, className = '', colSpan }) => (
+  <td
     className={`text-sm first:rounded-l-[12px] last:rounded-r-[12px] ${className}`}
     style={{
       padding: '24px 32px'
     }}
+    colSpan={colSpan}
   >
     {children}
   </td>

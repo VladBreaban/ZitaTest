@@ -105,7 +105,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         </div>
       </div>
 
-      <nav className="flex-1 pr-4 pt-4 lg:pt-20">
+      <nav className="flex-1 pr-4">
         {menuItems.map((item) => {
           const isActive = location.pathname === item.path ||
                           (item.path === '/recommendations' && location.pathname.startsWith('/recommendations'));

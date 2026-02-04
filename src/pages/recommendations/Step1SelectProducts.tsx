@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '../../components/ui';
 import { productService } from '../../services/productService';
 import { ShopifyProduct } from '../../types';
 import { SelectedProduct } from './CreateRecommendation';
@@ -17,10 +16,7 @@ interface Props {
 export const Step1SelectProducts: React.FC<Props> = ({
   selectedProducts,
   onSelectProducts,
-  onNext,
-  onCancel,
   search,
-  onSearchChange,
   onProductAdded,
 }) => {
   const [products, setProducts] = useState<ShopifyProduct[]>([]);
@@ -114,8 +110,6 @@ export const Step1SelectProducts: React.FC<Props> = ({
   const isProductSelected = (productId: number) => {
     return selectedProducts.some((p) => p.product.id === productId);
   };
-
-  const canContinue = selectedProducts.length > 0;
 
   const getPageNumbers = () => {
     const pages: (number | string)[] = [];

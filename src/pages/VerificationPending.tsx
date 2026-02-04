@@ -1,10 +1,7 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import './LoginForm.css';
 
 export const VerificationPending: React.FC = () => {
-  const navigate = useNavigate();
-
   return (
     <div className="flex bg-white" style={{ minHeight: '100vh' }}>
       {/* LEFT SIDE - IMAGE */}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Layout } from '../components/Layout/Layout';
-import { StatCard, Button, Card, Badge, Table, CustomSelect } from '../components/ui';
+import { StatCard, Button, Badge, Table, CustomSelect } from '../components/ui';
 import { AddClientModal } from '../components/AddClientModal';
 import { clientService } from '../services/clientService';
 import { Client } from '../types';

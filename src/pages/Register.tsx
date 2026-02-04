@@ -440,8 +440,8 @@ export const Register: React.FC = () => {
 };
 
 // File Upload Component
-const FileUploadComponent: React.FC<{ onUploadComplete: (url: string) => void; uploaded: boolean }> = ({ onUploadComplete, uploaded }) => {
-  const [uploading, setUploading] = useState(false);
+const FileUploadComponent: React.FC<{ onUploadComplete: (url: string) => void; uploaded: boolean }> = ({ onUploadComplete, uploaded: _uploaded }) => {
+  const [_uploading, setUploading] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<{ name: string; progress: number; size: number } | null>(null);
   const [dragActive, setDragActive] = useState(false);
 

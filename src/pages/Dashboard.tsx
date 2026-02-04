@@ -57,42 +57,6 @@ export const Dashboard: React.FC = () => {
     );
   }
 
-  const UsersIcon = (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF9933" strokeWidth="2">
-      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-      <circle cx="9" cy="7" r="4"></circle>
-      <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-    </svg>
-  );
-
-  const DollarIcon = (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF9933" strokeWidth="2">
-      <line x1="12" y1="1" x2="12" y2="23" />
-      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-    </svg>
-  );
-
-  const DotsIcon = (
-    <div className="flex items-center gap-1">
-      {[0, 1, 2].map((i) => (
-        <svg key={i} width="7" height="7" viewBox="0 0 24 24" fill="#FF9933">
-          <circle cx="12" cy="12" r="10" />
-        </svg>
-      ))}
-    </div>
-  );
-
-  const FileIcon = (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF9933" strokeWidth="2">
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-      <polyline points="14 2 14 8 20 8" />
-      <line x1="16" y1="13" x2="8" y2="13" />
-      <line x1="16" y1="17" x2="8" y2="17" />
-      <polyline points="10 9 9 9 8 9" />
-    </svg>
-  );
-
   return (
     <Layout>
       <div className="w-full">
@@ -107,7 +71,7 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* KPI Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:flex gap-6 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:flex lg:items-stretch gap-6 mb-10">
           <Link to="/clients" className="lg:flex-1 hover:opacity-90 transition-opacity">
             <StatCard
               value={stats?.activeClients ?? 0}
