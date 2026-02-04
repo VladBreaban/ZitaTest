@@ -123,7 +123,7 @@ export const Dashboard: React.FC = () => {
             }}
           >
             <div
-              className="absolute inset-0 bg-gradient-to-b from-black/10 to-black/80 group-hover:to-black/90 transition-all"
+              className="absolute inset-0 bg-gradient-to-b from-transparent to-black/10 group-hover:to-black/20 transition-all"
             />
             <div className="absolute top-4 right-4">
               <div
@@ -210,7 +210,7 @@ export const Dashboard: React.FC = () => {
               <img
                 src="/images/cards.svg"
                 alt=""
-                className="absolute top-0 right-0 w-auto h-auto scale-90 origin-top-right"
+                className="absolute top-0 w-auto h-auto scale-90 origin-top-right" style={{ right: -9 }}
               />
 
               <div className="pt-20 relative z-10">

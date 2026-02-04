@@ -158,7 +158,7 @@ export const Step1SelectProducts: React.FC<Props> = ({
             fontFamily: 'Inter',
             fontStyle: 'normal',
             fontWeight: 400,
-            fontSize: '18px',
+            fontSize: '16px',
             lineHeight: '32px',
             letterSpacing: '-0.01em',
             color: '#4A6A85',

@@ -72,7 +72,7 @@ export const Clients: React.FC = () => {
             <span style={{
               fontFamily: 'Inter',
               fontStyle: 'normal',
-              fontWeight: 700,
+              fontWeight: 600,
               fontSize: '16px',
               lineHeight: '27px',
               display: 'flex',

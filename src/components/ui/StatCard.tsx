@@ -26,9 +26,14 @@ export const StatCard: React.FC<StatCardProps> = ({
     <div
       className="flex flex-col items-start p-6 gap-[10px] rounded-[12px] cursor-pointer h-full"
       style={{
-        background: isWhite ? 'white' : 'rgba(0, 0, 0, 0.001)',
-        boxShadow: '0px 0px 0px 1px rgba(14, 63, 126, 0.04), 0px 1px 1px -0.5px rgba(42, 51, 69, 0.04), 0px 3px 3px -1.5px rgba(42, 51, 70, 0.04), 0px 6px 6px -3px rgba(42, 51, 70, 0.04), 0px 12px 12px -6px rgba(14, 63, 126, 0.04), 0px 24px 24px -12px rgba(14, 63, 126, 0.04)',
-        minHeight: '120px'
+        background: isWhite ? 'white' : 'linear-gradient(170deg, #EDEDEF 0%, #EDEDEF 10%, #FFFFFF 100%)',
+        boxShadow: '0px 0px 0px 1px rgba(14, 63, 126, 0.04),  0px 1px 1px -0.5px rgba(42, 51, 69, 0.04),  0px 3px 3px -1.5px rgba(42, 51, 70, 0.04),  0px 6px 6px -3px rgba(42, 51, 70, 0.04),  0px 12px 12px -6px rgba(14, 63, 126, 0.04),  0px 24px 24px -12px rgba(14, 63, 126, 0.04)',
+        minHeight: '120px',
+        border: 'inset',
+        borderWidth: 1, 
+        borderColor: '#ffffff', 
+        borderTop: 'none',
+        borderLeft: 'none'
       }}
     >
       <div className="w-full">
@@ -41,7 +46,7 @@ export const StatCard: React.FC<StatCardProps> = ({
             style={{
               fontFamily: 'Inter',
               fontStyle: 'normal',
-              fontWeight: 500,
+              fontWeight: 400,
               fontSize: '18px',
               lineHeight: '27px',
               letterSpacing: '-0.18px',
